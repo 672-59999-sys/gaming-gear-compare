@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gaming Gear Compare Grouped</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-r from-gray-900 via-purple-900 to-pink-900 text-white">
+
+<header class="bg-black/70 backdrop-blur-md fixed w-full z-50">
+  <div class="max-w-6xl mx-auto flex justify-between items-center p-4">
+    <div class="text-2xl font-bold">CompareGear</div>
+    <nav class="space-x-6">
+      <a href="#" id="compare-link" class="hover:text-pink-500">Compare</a>
+      <a href="#products" class="hover:text-pink-500">Products</a>
+      <a href="#contact-modal" id="contact-link" class="hover:text-pink-500">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<section class="pt-24 text-center">
+  <h1 class="text-5xl font-bold mb-4">เปรียบเทียบอุปกรณ์เกมมิ่งของคุณ</h1>
+  <p class="text-xl mb-8">ค้นหาและเปรียบเทียบ Mouse, Keyboard, Headset พร้อมกัน</p>
+</section>
+
+<div id="compare-modal" class="fixed inset-0 bg-black/70 hidden items-start justify-center z-50 overflow-auto pt-16">
+  <div class="bg-white text-black p-6 rounded-lg max-w-6xl w-full overflow-auto">
+    <h2 class="text-2xl font-bold mb-4">Compare Products</h2>
+    <div id="compare-list" class="space-y-6"></div>
+    <div class="flex gap-2 mt-4">
+      <button id="close-compare" class="bg-pink-500 p-2 rounded hover:bg-pink-600">Close</button>
+      <button id="clear-compare" class="bg-gray-300 p-2 rounded hover:bg-gray-400">Clear Compare</button>
+    </div>
+  </div>
+</div>
+
+<div id="contact-modal" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50">
+  <div class="bg-white text-black p-6 rounded-lg max-w-md w-full">
+    <h2 class="text-2xl font-bold mb-4 text-center">Contact Us</h2>
+    <form action="mailto:phuriwat.kaolnmzae@gmail.com" method="POST" encType="text/plain" class="flex flex-col gap-4">
+      <input type="text" name="name" placeholder="Your Name" class="p-2 rounded border border-gray-300 text-black" required />
+      <input type="email" name="email" placeholder="Your Email" class="p-2 rounded border border-gray-300 text-black" required />
+      <textarea name="message" rows="5" placeholder="Your Message" class="p-2 rounded border border-gray-300 text-black" required></textarea>
+      <button type="submit" class="bg-pink-500 p-2 rounded hover:bg-pink-600">Send</button>
+    </form>
+    <button id="close-contact" class="mt-4 bg-pink-500 p-2 rounded hover:bg-pink-600 w-full">Close</button>
+  </div>
+</div>
+
+<section id="products" class="max-w-6xl mx-auto p-4 grid md:grid-cols-3 gap-6">
+  <!-- Mouse -->
+  <h2 class="col-span-3 text-2xl font-bold mt-8 mb-4">Mouse</h2>
+  <div class="bg-black/60 rounded-lg overflow-hidden shadow-lg" data-type="Mouse" data-name="Logitech G304" data-specs='{"Type":"Mouse","Rating":"4.7","Price":"$49","DPI":"12000","Weight":"99g"}'>
+    <img src="https://ihcupload.s3.ap-southeast-1.amazonaws.com/img/product/product3166_800.jpg" class="w-full h-48 object-cover" />
+    <div class="p-4">
+      <h2 class="font-bold text-xl">Logitech G304</h2>
+      <p>Mouse • ★4.7</p>
+      <p class="font-bold">$49</p>
+      <button class="mt-2 px-4 py-2 bg-pink-500 rounded hover:bg-pink-600 add-compare">เพิ่มเพื่อเปรียบเทียบ</button>
+    </div>
+  </div>
+  <div class="bg-black/60 rounded-lg overflow-hidden shadow-lg" data-type="Mouse" data-name="Razer DeathAdder V2" data-specs='{"Type":"Mouse","Rating":"4.8","Price":"$69","DPI":"20000","Weight":"82g"}'>
+    <img src="https://assets2.razerzone.com/images/pnx.assets/8a3a26ef7d42f558593e3e0b0d6e4d92/deathadder-v2-gallery-1.jpg" class="w-full h-48 object-cover" />
+    <div class="p-4">
+      <h2 class="font-bold text-xl">Razer DeathAdder V2</h2>
+      <p>Mouse • ★4.8</p>
+      <p class="font-bold">$69</p>
+      <button class="mt-2 px-4 py-2 bg-pink-500 rounded hover:bg-pink-600 add-compare">เพิ่มเพื่อเปรียบเทียบ</button>
+    </div>
+  </div>
+  <!-- New Mouse -->
+  <div class="bg-black/60 rounded-lg overflow-hidden shadow-lg" data-type="Mouse" data-name="SteelSeries Rival 3" data-specs='{"Type":"Mouse","Rating":"4.5","Price":"$39","DPI":"8500","Weight":"77g"}'>
+    <img src="https://cdn.mos.cms.futurecdn.net/MAYhmcZ6zpTDhHDZ6kAXiK.jpg" class="w-full h-48 object-cover" />
+    <div class="p-4">
+      <h2 class="font-bold text-xl">SteelSeries Rival 3</h2>
+      <p>Mouse • ★4.5</p>
+      <p class="font-bold">$39</p>
+      <button class="mt-2 px-4 py-2 bg-pink-500 rounded hover:bg-pink-600 add-compare">เพิ่มเพื่อเปรียบเทียบ</button>
+    </div>
+  </div>
+
+  <!-- Keyboard -->
+  <h2 class="col-span-3 text-2xl font-bold mt-8 mb-4">Keyboard</h2>
+  <div class="bg-black/60 rounded-lg overflow-hidden shadow-lg" data-type="Keyboard" data-name="HyperX Alloy FPS Pro" data-specs='{"Type":"Keyboard","Rating":"4.6","Price":"$89","Switch":"Mechanical","Lighting":"Red LED"}'>
+    <img src="https://images.hyperxgaming.com/images/products/keyboards/alloyfpspro/gallery/1.jpg" class="w-full h-48 object-cover" />
+    <div class="p-4">
+      <h2 class="font-bold text-xl">HyperX Alloy FPS Pro</h2>
+      <p>Keyboard • ★4.6</p>
+      <p class="font-bold">$89</p>
+      <button class="mt-2 px-4 py-2 bg-pink-500 rounded hover:bg-pink-600 add-compare">เพิ่มเพื่อเปรียบเทียบ</button>
+    </div>
+  </div>
+  <div class="bg-black/60 rounded-lg overflow-hidden shadow-lg" data-type="Keyboard" data-name="Corsair K70 RGB" data-specs='{"Type":"Keyboard","Rating":"4.8","Price":"$129","Switch":"Mechanical","Lighting":"RGB"}'>
+    <img src="https://www.corsair.com/corsairmedia/sys_master/productcontent/CH-9109014-NA-gallery-1.png" class="w-full h-48 object-cover" />
+    <div class="p-4">
+      <h2 class="font-bold text-xl">Corsair K70 RGB</h2>
+      <p>Keyboard • ★4.8</p>
+      <p class="font-bold">$129</p>
+      <button class="mt-2 px-4 py-2 bg-pink-500 rounded hover:bg-pink-600 add-compare">เพิ่มเพื่อเปรียบเทียบ</button>
+    </div>
+  </div>
+  <!-- New Keyboard -->
+  <div class="bg-black/60 rounded-lg overflow-hidden shadow-lg" data-type="Keyboard" data-name="Razer BlackWidow V3" data-specs='{"Type":"Keyboard","Rating":"4.7","Price":"$139","Switch":"Mechanical","Lighting":"RGB"}'>
+    <img src="https://assets2.razerzone.com/images/pnx.assets/81944951c6eec7d87edb3a5eb3a7e91d/razer-blackwidow-v3-gallery-1.jpg" class="w-full h-48 object-cover" />
+    <div class="p-4">
+      <h2 class="font-bold text-xl">Razer BlackWidow V3</h2>
+      <p>Keyboard • ★4.7</p>
+      <p class="font-bold">$139</p>
+      <button class="mt-2 px-4 py-2 bg-pink-500 rounded hover:bg-pink-600 add-compare">เพิ่มเพื่อเปรียบเทียบ</button>
+    </div>
+  </div>
+
+  <!-- Headset -->
+  <h2 class="col-span-3 text-2xl font-bold mt-8 mb-4">Headset</h2>
+  <div class="bg-black/60 rounded-lg overflow-hidden shadow-lg" data-type="Headset" data-name="Logitech G Pro X" data-specs='{"Type":"Headset","Rating":"4.7","Price":"$99","Connectivity":"Wired","Mic":"Detachable"}'>
+    <img src="https://www.logitechg.com/assets/63652/2/g-pro-x-gaming-headset-gallery-1.png" class="w-full h-48 object-cover" />
+    <div class="p-4">
+      <h2 class="font-bold text-xl">Logitech G Pro X</h2>
+      <p>Headset • ★4.7</p>
+      <p class="font-bold">$99</p>
+      <button class="mt-2 px-4 py-2 bg-pink-500 rounded hover:bg-pink-600 add-compare">เพิ่มเพื่อเปรียบเทียบ</button>
+    </div>
+  </div>
+  <div class="bg-black/60 rounded-lg overflow-hidden shadow-lg" data-type="Headset" data-name="HyperX Cloud II" data-specs='{"Type":"Headset","Rating":"4.6","Price":"$89","Connectivity":"Wired","Mic":"Noise-cancelling"}'>
+    <img src="https://images.hyperxgaming.com/images/products/headsets/cloud-ii/gallery/1.jpg" class="w-full h-48 object-cover" />
+    <div class="p-4">
+      <h2 class="font-bold text-xl">HyperX Cloud II</h2>
+      <p>Headset • ★4.6</p>
+      <p class="font-bold">$89</p>
+      <button class="mt-2 px-4 py-2 bg-pink-500 rounded hover:bg-pink-600 add-compare">เพิ่มเพื่อเปรียบเทียบ</button>
+    </div>
+  </div>
+  <!-- New Headset -->
+  <div class="bg-black/60 rounded-lg overflow-hidden shadow-lg" data-type="Headset" data-name="SteelSeries Arctis 7" data-specs='{"Type":"Headset","Rating":"4.5","Price":"$149","Connectivity":"Wireless","Mic":"Retractable"}'>
+    <img src="https://cdn.mos.cms.futurecdn.net/4A8sztP8awXbHPMYQ8Vebg.jpg" class="w-full h-48 object-cover" />
+    <div class="p-4">
+      <h2 class="font-bold text-xl">SteelSeries Arctis 7</h2>
+      <p>Headset • ★4.5</p>
+      <p class="font-bold">$149</p>
+      <button class="mt-2 px-4 py-2 bg-pink-500 rounded hover:bg-pink-600 add-compare">เพิ่มเพื่อเปรียบเทียบ</button>
+    </div>
+  </div>
+</section>
+
+<script>
+const compareList = [];
+const compareButtons = document.querySelectorAll('.add-compare');
+const compareModal = document.getElementById('compare-modal');
+const compareListElement = document.getElementById('compare-list');
+const closeCompare = document.getElementById('close-compare');
+const clearCompare = document.getElementById('clear-compare');
+const contactModal = document.getElementById('contact-modal');
+const contactLink = document.getElementById('contact-link');
+const closeContact = document.getElementById('close-contact');
+
+compareButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const card = btn.closest('[data-name]');
+    const name = card.getAttribute('data-name');
+    const type = card.getAttribute('data-type');
+    const specs = JSON.parse(card.getAttribute('data-specs'));
+
+    const idx = compareList.findIndex(p => p.name === name);
+    if(idx === -1){
+      compareList.push({name,type,specs});
+      btn.textContent='ลบออกจาก Compare';
+      btn.classList.replace('bg-pink-500','bg-gray-500');
+    } else {
+      compareList.splice(idx,1);
+      btn.textContent='เพิ่มเพื่อเปรียบเทียบ';
+      btn.classList.replace('bg-gray-500','bg-pink-500');
+    }
+    renderCompareList();
+  });
+});
+
+function renderCompareList(){
+  if(compareList.length===0){
+    compareListElement.innerHTML='<p>ไม่มีสินค้าที่เลือก</p>';
+    return;
+  }
+  const grouped = {};
+  compareList.forEach(p=>{
+    if(!grouped[p.type]) grouped[p.type]=[];
+    grouped[p.type].push(p);
+  });
+  let html='';
+  for(const type in grouped){
+    html+=`<h3 class="text-xl font-bold mt-4 mb-2">${type}</h3>`;
+    const keys = new Set();
+    grouped[type].forEach(p=>Object.keys(p.specs).forEach(k=>keys.add(k)));
+    let table = '<table class="table-auto border-collapse w-full text-left"><tr>';
+    table+=Array.from(keys).map(k=>`<th class="border px-4 py-2">${k}</th>`).join('');
+    table+='</tr>';
+    grouped[type].forEach(p=>{
+      table+='<tr>'+Array.from(keys).map(k=>`<td class="border px-4 py-2">${p.specs[k]||'-'}</td>`).join('')+'</tr>';
+    });
+    table+='</table>';
+    html+=table;
+  }
+  compareListElement.innerHTML=html;
+}
+
+document.getElementById('compare-link').addEventListener('click',e=>{
+  e.preventDefault();
+  compareModal.classList.remove('hidden');
+  compareModal.classList.add('flex');
+  renderCompareList();
+});
+closeCompare.addEventListener('click',()=>{compareModal.classList.add('hidden');compareModal.classList.remove('flex');});
+clearCompare.addEventListener('click',()=>{
+  compareList.length=0;
+  compareButtons.forEach(btn=>{btn.textContent='เพิ่มเพื่อเปรียบเทียบ';btn.classList.replace('bg-gray-500','bg-pink-500');});
+  renderCompareList();
+});
+contactLink.addEventListener('click',e=>{e.preventDefault();contactModal.classList.remove('hidden');contactModal.classList.add('flex');});
+closeContact.addEventListener('click',()=>{contactModal.classList.add('hidden');contactModal.classList.remove('flex');});
+</script>
+
+</body>
+</html>
