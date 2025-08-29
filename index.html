@@ -6,6 +6,7 @@
   <title>CompareGear – เปรียบเทียบอุปกรณ์เกมมิ่ง (แยกยี่ห้อ + Search + Sidebar + AutoScroll)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <meta name="color-scheme" content="dark" />
+  <!-- redirect removed so index.html#products ใช้งานได้ -->
   <style>
     /* ทำให้การเลื่อนลื่นขึ้น */
     [data-autoscroll="x"]{ scroll-behavior: smooth; }
@@ -19,6 +20,8 @@
     <div class="max-w-6xl mx-auto flex justify-between items-center p-4">
       <div class="text-2xl font-bold select-none">CompareGear</div>
       <nav class="flex items-center gap-6">
+        <!-- ใช้ hash routing แทนไฟล์แยก เพื่อเปิดหน้าแรกเป็น Home โดยไม่กระทบลิงก์ Products -->
+        <a href="#home" id="home-link" class="hover:text-pink-400 focus:outline-none focus:ring focus:ring-pink-500/40 rounded px-2 py-1">Home</a>
         <a href="#" id="compare-link" class="relative hover:text-pink-400 focus:outline-none focus:ring focus:ring-pink-500/40 rounded px-2 py-1">
           Compare
           <span id="compare-count-badge" class="hidden absolute -right-3 -top-2 text-xs bg-pink-500 text-white px-1.5 py-0.5 rounded-full">0</span>
@@ -28,280 +31,302 @@
       </nav>
     </div>
   </header>
-
-  <!-- Sidebar หมวดหมู่ (ซ้าย) -->
-  <aside class="hidden md:flex fixed left-0 top-16 md:top-20 bottom-0 w-40 z-40">
-    <div class="m-3 bg-black/60 backdrop-blur rounded-2xl p-3 shadow-xl w-full">
-      <p class="text-sm font-semibold mb-2 opacity-80">หมวดหมู่</p>
-      <div id="cat-filter" class="flex md:flex-col gap-2">
-        <button data-cat="all" class="cat-chip w-full text-left px-3 py-2 rounded-lg bg-pink-500 text-white text-sm">All</button>
-        <button data-cat="Mouse" class="cat-chip w-full text-left px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-sm">Mouse</button>
-        <button data-cat="Keyboard" class="cat-chip w-full text-left px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-sm">Keyboard</button>
-        <button data-cat="Headset" class="cat-chip w-full text-left px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-sm">Headset</button>
+  <!-- Home section (default view) -->
+  <section id="home" class="pt-24 md:pl-44 text-center px-4">
+    <div class="max-w-4xl mx-auto p-6">
+      <h1 class="text-5xl font-bold mb-4">ยินดีต้อนรับสู่ CompareGear</h1>
+      <p class="text-lg mb-6 opacity-90">หน้าแรกสรุปฟีเจอร์ — เปรียบเทียบ Mouse, Keyboard, Headset ได้อย่างรวดเร็ว</p>
+      <div class="bg-black/50 backdrop-blur rounded-2xl p-6 shadow-xl space-y-4">
+        <h2 class="text-2xl font-semibold">วิธีใช้</h2>
+        <ol class="list-decimal list-inside text-left space-y-2">
+          <li>ไปที่ <a href="#products" class="text-pink-400 underline">Products</a> เพื่อเลือกสินค้า</li>
+          <li>กด "เพิ่มเพื่อเปรียบเทียบ" บนการ์ดสินค้า</li>
+          <li>เปิดหน้าต่าง Compare จาก dock หรือปุ่ม Compare</li>
+        </ol>
+        <div class="flex justify-center gap-3 mt-4">
+          <a href="#products" class="px-4 py-2 bg-pink-500 rounded hover:bg-pink-600 text-white">ดูสินค้า</a>
+          <a href="#compare-modal" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 text-black">ไปยังหน้าเปรียบเทียบ</a>
+        </div>
       </div>
-    </div>
-  </aside>
-
-  <!-- Hero -->
-  <section class="pt-24 md:pl-44 text-center px-4">
-    <h1 class="text-5xl font-bold mb-4">เปรียบเทียบอุปกรณ์เกมมิ่งของคุณ</h1>
-    <p class="text-xl mb-8 opacity-90">เลือก Mouse, Keyboard, Headset แล้วกด Compare ได้ทันที</p>
-  </section>
-
-  <!-- Toolbar: Brand Filter + Search -->
-  <section class="max-w-6xl mx-auto p-4 mt-2 md:pl-40">
-    <div class="bg-black/50 backdrop-blur rounded-2xl p-4 shadow-xl flex flex-col md:flex-row gap-3 md:items-center md:justify-between">
-      <div class="flex flex-wrap items-center gap-2" id="brand-filter">
-        <button data-brand="all" class="brand-chip px-3 py-1.5 rounded-full bg-pink-500 text-white text-sm">All</button>
-        <button data-brand="Logitech" class="brand-chip px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-sm">Logitech</button>
-        <button data-brand="Razer" class="brand-chip px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-sm">Razer</button>
-        <button data-brand="HyperX" class="brand-chip px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-sm">HyperX</button>
-        <button data-brand="SteelSeries" class="brand-chip px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-sm">SteelSeries</button>
-        <button data-brand="Corsair" class="brand-chip px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-sm">Corsair</button>
-      </div>
-      <div class="w-full md:w-80">
-        <label class="flex items-center gap-2 bg-white/10 rounded-xl px-3 py-2">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input id="search-input" type="text" placeholder="ค้นหาสินค้า/สเปค เช่น 1000 Hz, Wireless" class="bg-transparent outline-none w-full placeholder-white/60" />
-        </label>
-      </div>
+      <footer class="mt-8 text-sm opacity-80">© CompareGear</footer>
     </div>
   </section>
 
-  <!-- Products Scroll Wrapper (เพิ่ม auto scroll แนวนอน) -->
-  <section class="max-w-6xl mx-auto p-4 md:pl-40">
-    <div id="products" class="overflow-x-auto" data-autoscroll="x">
-      <div class="grid md:grid-cols-3 gap-6 min-w-[900px]">
-        <!-- Mouse -->
-        <h2 data-cat="Mouse" class="col-span-3 text-2xl font-bold mt-8 mb-4">Mouse</h2>
-
-        <div class="product-card bg-black/60 rounded-xl overflow-hidden shadow-lg" data-id="mouse-g304" data-type="Mouse" data-name="Logitech G304" data-price="฿1,039.00" data-specs='{
-          "Type":"Mouse","Rating":"4.7","DPI":"12,000","Sensor":"HERO","Polling Rate":"1000 Hz","Acceleration":"40G","Weight":"99 g","Connectivity":"Wireless 2.4G (Lightspeed)","Battery":"1×AA (สูงสุด ~250 ชม.)","Buttons":"6","Shape":"Symmetrical Right","Grip":"Claw / Fingertip","Dimensions":"116.6 × 62.15 × 38.2 mm","Warranty":"2 ปี"
-        }'>
-          <img src="https://ihcupload.s3.ap-southeast-1.amazonaws.com/img/product/product3166_800.jpg" class="w-full h-48 object-contain bg-white" alt="Logitech G304" />
-          <div class="p-4">
-            <div class="text-xs opacity-80 mb-1"><span class="brand-badge px-2 py-0.5 rounded bg-white/10">—</span></div>
-            <h3 class="font-bold text-xl">LOGITECH G304</h3>
-            <p class="opacity-80">Mouse • ★4.7</p>
-            <p class="font-bold">฿1,039.00</p>
-            <button class="mt-3 px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 add-compare">เพิ่มเพื่อเปรียบเทียบ</button>
-          </div>
-        </div>
-
-        <div class="product-card bg-black/60 rounded-xl overflow-hidden shadow-lg" data-id="mouse-dav3" data-type="Mouse" data-name="Razer DeathAdder V3" data-price="฿1,990.00" data-specs='{
-          "Type":"Mouse","Rating":"4.8","DPI":"26,000","Sensor":"Focus Pro 30K","Polling Rate":"1000 Hz (รองรับ 8K)","Acceleration":"70G","Weight":"59 g","Connectivity":"Wired / Wireless (ขึ้นกับรุ่น)","Battery":"~90 ชม. (Wireless)","Buttons":"6","Shape":"Ergonomic Right","Grip":"Palm / Claw","Feet":"100% PTFE","Dimensions":"128 × 68 × 44 mm","Warranty":"2 ปี"
-        }'>
-          <img src="https://ihcupload.s3.ap-southeast-1.amazonaws.com/img/product/product33232_800.png" class="w-full h-48 object-contain bg-white" alt="Razer DeathAdder V3" />
-          <div class="p-4">
-            <div class="text-xs opacity-80 mb-1"><span class="brand-badge px-2 py-0.5 rounded bg-white/10">—</span></div>
-            <h3 class="font-bold text-xl">RAZER DEATHADDER V3</h3>
-            <p class="opacity-80">Mouse • ★4.8</p>
-            <p class="font-bold">฿1,990.00</p>
-            <button class="mt-3 px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 add-compare">เพิ่มเพื่อเปรียบเทียบ</button>
-          </div>
-        </div>
-
-        <div class="product-card bg-black/60 rounded-xl overflow-hidden shadow-lg" data-id="mouse-rival3" data-type="Mouse" data-name="SteelSeries Rival 3" data-price="฿1,490.00" data-specs='{
-          "Type":"Mouse","Rating":"4.5","DPI":"8,500","Sensor":"TrueMove Core","Polling Rate":"1000 Hz","Weight":"77 g","Connectivity":"Wired","Buttons":"6","Shape":"Ergonomic Right","Grip":"Claw / Fingertip","Lighting":"RGB (1 โซน)","Dimensions":"120.6 × 58.3 × 21.5 mm","Warranty":"1 ปี"
-        }'>
-          <img src="https://ihcupload.s3.ap-southeast-1.amazonaws.com/img/product/products43592_800.jpg" class="w-full h-48 object-contain bg-white" alt="SteelSeries Rival 3" />
-          <div class="p-4">
-            <div class="text-xs opacity-80 mb-1"><span class="brand-badge px-2 py-0.5 rounded bg-white/10">—</span></div>
-            <h3 class="font-bold text-xl">STEELSERIES RIVAL 3</h3>
-            <p class="opacity-80">Mouse • ★4.5</p>
-            <p class="font-bold">฿1,490.00</p>
-            <button class="mt-3 px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 add-compare">เพิ่มเพื่อเปรียบเทียบ</button>
-          </div>
-        </div>
-
-        <!-- NEW Mouse +1 -->
-        <div class="product-card bg-black/60 rounded-xl overflow-hidden shadow-lg" data-id="mouse-harpoon" data-type="Mouse" data-name="Corsair Harpoon RGB Wireless" data-price="฿1,290.00" data-specs='{
-          "Type":"Mouse","Rating":"4.6","DPI":"10,000","Sensor":"PMW3325","Polling Rate":"1000 Hz","Weight":"99 g","Connectivity":"Wireless 2.4G / BT / USB","Battery":"~60 ชม.","Buttons":"6","Shape":"Ergonomic Right","Grip":"Palm / Claw","Lighting":"RGB","Dimensions":"115 × 68 × 40 mm","Warranty":"2 ปี"
-        }'>
-          <img src="https://ihcupload.s3.ap-southeast-1.amazonaws.com/img/product/product33879_800.jpg" class="w-full h-48 object-contain bg-white" alt="Corsair Harpoon RGB Wireless" />
-          <div class="p-4">
-            <div class="text-xs opacity-80 mb-1"><span class="brand-badge px-2 py-0.5 rounded bg-white/10">—</span></div>
-            <h3 class="font-bold text-xl">CORSAIR HARPOON RGB WIRELESS</h3>
-            <p class="opacity-80">Mouse • ★4.6</p>
-            <p class="font-bold">฿1,590.00</p>
-            <button class="mt-3 px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 add-compare">เพิ่มเพื่อเปรียบเทียบ</button>
-          </div>
-        </div>
-
-        <!-- Keyboard -->
-        <h2 data-cat="Keyboard" class="col-span-3 text-2xl font-bold mt-8 mb-4">Keyboard</h2>
-
-        <div class="product-card bg-black/60 rounded-xl overflow-hidden shadow-lg" data-id="kb-hx-rise75" data-type="Keyboard" data-name="HyperX Alloy Rise 75" data-price="฿6,190.00" data-specs='{
-          "Type":"Keyboard","Rating":"4.6","Size":"75%","Layout":"ANSI","Switch":"HyperX Pre-lubed (Hot-swap)","Mount":"Gasket","Keycap":"PBT Dye-sub","Stabilizers":"Pre-lubed","Connection":"USB-C / Wireless 2.4G / BT 5.0","Battery":"3,000 mAh","Lighting":"RGB Per-key","Polling Rate":"1000 Hz (2.4G)","Software":"HyperX NGENUITY","Dimensions":"~ 325 × 135 × 40 mm","Weight":"~ 900 g","Warranty":"2 ปี"
-        }'>
-          <img src="https://ihcupload.s3.ap-southeast-1.amazonaws.com/img/product/products63368_800.jpg" class="w-full h-48 object-contain bg-white" alt="HyperX Alloy Rise 75" />
-          <div class="p-4">
-            <div class="text-xs opacity-80 mb-1"><span class="brand-badge px-2 py-0.5 rounded bg-white/10">—</span></div>
-            <h3 class="font-bold text-xl">HyperX ALLOY RISE 75</h3>
-            <p class="opacity-80">Keyboard • ★4.6</p>
-            <p class="font-bold">฿6,190.00</p>
-            <button class="mt-3 px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 add-compare">เพิ่มเพื่อเปรียบเทียบ</button>
-          </div>
-        </div>
-
-        <div class="product-card bg-black/60 rounded-xl overflow-hidden shadow-lg" data-id="kb-k70-core" data-type="Keyboard" data-name="Corsair K70 Core RGB" data-price="฿2,490.00" data-specs='{
-          "Type":"Keyboard","Rating":"4.8","Size":"Full-size","Layout":"ANSI","Switch":"Corsair MLX (Hot-swap)","Keycap":"ABS Double-shot","Frame":"Aluminum Top Plate","Connection":"USB-C Wired","Polling Rate":"1000 Hz","Lighting":"RGB Per-key","Media Keys":"มี","Software":"iCUE","Wrist Rest":"ถอดได้","Dimensions":"~ 442 × 166 × 40 mm","Weight":"~ 1.1 kg","Warranty":"2 ปี"
-        }'>
-          <img src="https://ihcupload.s3.ap-southeast-1.amazonaws.com/img/product/product34156_800.jpg" class="w-full h-48 object-contain bg-white" alt="Corsair K70 Core RGB" />
-          <div class="p-4">
-            <div class="text-xs opacity-80 mb-1"><span class="brand-badge px-2 py-0.5 rounded bg-white/10">—</span></div>
-            <h3 class="font-bold text-xl">CORSAIR K70 CORE RGB</h3>
-            <p class="opacity-80">Keyboard • ★4.8</p>
-            <p class="font-bold">฿2,490.00</p>
-            <button class="mt-3 px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 add-compare">เพิ่มเพื่อเปรียบเทียบ</button>
-          </div>
-        </div>
-
-        <div class="product-card bg-black/60 rounded-xl overflow-hidden shadow-lg" data-id="kb-ornata-v3" data-type="Keyboard" data-name="Razer Ornata V3" data-price="฿2,190.00" data-specs='{
-          "Type":"Keyboard","Rating":"4.7","Size":"Full-size","Layout":"ANSI","Switch":"Mecha-membrane","Keycap":"ABS","Connection":"USB-C Wired","Lighting":"RGB (Chroma)","Media Keys":"มี","Wrist Rest":"มี","Spill Resistant":"Yes","Dimensions":"~ 443 × 170 × 31 mm","Weight":"~ 0.8 kg","Warranty":"2 ปี"
-        }'>
-          <img src="https://ihcupload.s3.ap-southeast-1.amazonaws.com/img/product/products61881_800.jpg" class="w-full h-48 object-contain bg-white" alt="Razer Ornata V3" />
-          <div class="p-4">
-            <div class="text-xs opacity-80 mb-1"><span class="brand-badge px-2 py-0.5 rounded bg-white/10">—</span></div>
-            <h3 class="font-bold text-xl">RAZER ORNATA V3</h3>
-            <p class="opacity-80">Keyboard • ★4.7</p>
-            <p class="font-bold">฿2,190.00</p>
-            <button class="mt-3 px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 add-compare">เพิ่มเพื่อเปรียบเทียบ</button>
-          </div>
-        </div>
-
-        <!-- NEW Keyboard +1 -->
-        <div class="product-card bg-black/60 rounded-xl overflow-hidden shadow-lg" data-id="kb-apex3tkl" data-type="Keyboard" data-name="SteelSeries Apex 3 TKL" data-price="฿1,790.00" data-specs='{
-          "Type":"Keyboard","Rating":"4.5","Size":"TKL","Layout":"ANSI","Switch":"Whisper-Quiet (Membrane)","Frame":"Polymer","Connection":"USB-C Wired","Lighting":"RGB 8 โซน","Spill Resistant":"IP32","Media Keys":"มี","Wrist Rest":"ไม่มี","Software":"SteelSeries GG","Dimensions":"~ 364 × 150 × 40 mm","Weight":"~ 0.64 kg","Warranty":"2 ปี"
-        }'>
-          <img src="https://ihcupload.s3.ap-southeast-1.amazonaws.com/img/product/products45033_800.jpg" class="w-full h-48 object-contain bg-white" alt="SteelSeries Apex 3 TKL" />
-          <div class="p-4">
-            <div class="text-xs opacity-80 mb-1"><span class="brand-badge px-2 py-0.5 rounded bg-white/10">—</span></div>
-            <h3 class="font-bold text-xl">STEELSERIES APEX 3 TKL</h3>
-            <p class="opacity-80">Keyboard • ★4.5</p>
-            <p class="font-bold">฿2,890.00</p>
-            <button class="mt-3 px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 add-compare">เพิ่มเพื่อเปรียบเทียบ</button>
-          </div>
-        </div>
-
-        <!-- Headset -->
-        <h2 data-cat="Headset" class="col-span-3 text-2xl font-bold mt-8 mb-4">Headset</h2>
-
-        <div class="product-card bg-black/60 rounded-xl overflow-hidden shadow-lg" data-id="hs-g333" data-type="Headset" data-name="Logitech G333" data-price="฿1,090.00" data-specs='{
-          "Type":"Headset","Rating":"4.7","Form":"In-ear","Driver":"Dynamic 5.8 mm + 9.2 mm (Dual)","Frequency Response":"20 Hz – 20 kHz","Impedance":"24 Ω","Sensitivity":"101.6 dB @1 kHz SPL","Mic":"Inline","Connectivity":"3.5 mm / USB-C (with adapter)","Cable":"1.2 m","Weight":"~ 19 g","Compatibility":"PC/Console/Mobile","Warranty":"2 ปี"
-        }'>
-          <img src="https://ihcupload.s3.ap-southeast-1.amazonaws.com/img/product/products72284_800.jpg" class="w-full h-48 object-contain bg-white" alt="Logitech G333" />
-          <div class="p-4">
-            <div class="text-xs opacity-80 mb-1"><span class="brand-badge px-2 py-0.5 rounded bg-white/10">—</span></div>
-            <h3 class="font-bold text-xl">LOGITECH G333</h3>
-            <p class="opacity-80">Headset • ★4.7</p>
-            <p class="font-bold">฿1,090.00</p>
-            <button class="mt-3 px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 add-compare">เพิ่มเพื่อเปรียบเทียบ</button>
-          </div>
-        </div>
-
-        <div class="product-card bg-black/60 rounded-xl overflow-hidden shadow-lg" data-id="hs-cloud-earbuds2" data-type="Headset" data-name="HyperX Cloud Earbuds II" data-price="฿1,090.00" data-specs='{
-          "Type":"Headset","Rating":"4.6","Form":"In-ear","Driver":"14 mm","Frequency Response":"20 Hz – 20 kHz","Impedance":"24 Ω","Sensitivity":"116 dB SPL/mW","Mic":"Inline, Noise-cancelling","Connectivity":"3.5 mm (TRRS)","Cable":"1.2 m","Weight":"~ 20 g","Includes":"Ear tips (4 ขนาด)","Warranty":"2 ปี"
-        }'>
-          <img src="https://ihcupload.s3.ap-southeast-1.amazonaws.com/img/product/products124206_800.png" class="w-full h-48 object-contain bg-white" alt="HyperX Cloud Earbuds II" />
-          <div class="p-4">
-            <div class="text-xs opacity-80 mb-1"><span class="brand-badge px-2 py-0.5 rounded bg-white/10">—</span></div>
-            <h3 class="font-bold text-xl">HyperX CLOUD EARBUDS II</h3>
-            <p class="opacity-80">Headset • ★4.6</p>
-            <p class="font-bold">฿1,090.00</p>
-            <button class="mt-3 px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 add-compare">เพิ่มเพื่อเปรียบเทียบ</button>
-          </div>
-        </div>
-
-        <div class="product-card bg-black/60 rounded-xl overflow-hidden shadow-lg" data-id="hs-arctis-nova7" data-type="Headset" data-name="SteelSeries Arctis Nova 7" data-price="฿5,590.00" data-specs='{
-          "Type":"Headset","Rating":"4.5","Form":"Over-ear","Driver":"40 mm","Frequency Response":"20 Hz – 22 kHz","Impedance":"36 Ω","Sensitivity":"93 dBSPL","Mic":"Retractable, ClearCast Gen 2","Connectivity":"Wireless 2.4G + BT Multipoint / USB-C","Battery":"~ 38 ชม.","Charging":"USB-C Fast Charge","Surround":"Tempest 3D / Windows Sonic","Weight":"~ 325 g","Warranty":"2 ปี"
-        }'>
-          <img src="https://ihcupload.s3.ap-southeast-1.amazonaws.com/img/product/products79670_800.jpg" class="w-full h-48 object-contain bg-white" alt="SteelSeries Arctis Nova 7" />
-          <div class="p-4">
-            <div class="text-xs opacity-80 mb-1"><span class="brand-badge px-2 py-0.5 rounded bg-white/10">—</span></div>
-            <h3 class="font-bold text-xl">STEELSERIES ARCTIS NOVA 7</h3>
-            <p class="opacity-80">Headset • ★4.5</p>
-            <p class="font-bold">฿5,590.00</p>
-            <button class="mt-3 px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 add-compare">เพิ่มเพื่อเปรียบเทียบ</button>
-          </div>
-        </div>
-
-        <!-- NEW Headset +1 -->
-        <div class="product-card bg-black/60 rounded-xl overflow-hidden shadow-lg" data-id="hs-hs80" data-type="Headset" data-name="Corsair HS80 RGB Wireless" data-price="฿4,990.00" data-specs='{
-          "Type":"Headset","Rating":"4.6","Form":"Over-ear","Driver":"50 mm","Frequency Response":"20 Hz – 40 kHz","Impedance":"32 Ω","Sensitivity":"109 dB","Mic":"Flip-to-mute Broadcast","Connectivity":"Wireless 2.4G / USB","Battery":"~ 20 ชม.","Charging":"USB-C","Surround":"Dolby Audio 7.1 (PC)","Weight":"~ 367 g","Warranty":"2 ปี"
-        }'>
-          <img src="https://ihcupload.s3.ap-southeast-1.amazonaws.com/img/product/products79622_800.jpg" class="w-full h-48 object-contain bg-white" alt="Corsair HS80 RGB Wireless" />
-          <div class="p-4">
-            <div class="text-xs opacity-80 mb-1"><span class="brand-badge px-2 py-0.5 rounded bg-white/10">—</span></div>
-            <h3 class="font-bold text-xl">CORSAIR HS80 RGB WIRELESS</h3>
-            <p class="opacity-80">Headset • ★4.6</p>
-            <p class="font-bold">฿3,590.00</p>
-            <button class="mt-3 px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 add-compare">เพิ่มเพื่อเปรียบเทียบ</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Compare Modal -->
-  <div id="compare-modal" class="fixed inset-0 hidden items-start justify-center z-[60] overflow-auto pt-16" aria-hidden="true">
-    <div class="absolute inset-0 bg-black/60" data-dismiss="overlay"></div>
-    <div class="relative bg-white text-black p-6 rounded-2xl max-w-6xl w-[92vw] md:w-[80vw] lg:w-[72rem] shadow-2xl mx-auto">
-      <div class="flex items-center justify-between gap-4">
-        <h2 class="text-2xl font-bold">Compare Products</h2>
-        <div class="flex items-center gap-3">
-          <label class="flex items-center gap-2 text-sm select-none"><input type="checkbox" id="toggle-advanced" class="accent-pink-500" /> แสดงสเปคขั้นสูง</label>
-          <button id="close-compare" class="px-3 py-1.5 rounded-lg bg-gray-200 hover:bg-gray-300">ปิด</button>
-        </div>
-      </div>
-      <p class="text-sm text-gray-600 mt-2">ไฮไลต์อัตโนมัติ: Mouse → DPI สูงสุด, น้ำหนักเบาสุด • Headset → ราคาแพงสุด</p>
-      <div id="compare-list" class="space-y-6 mt-4 overflow-x-auto" data-autoscroll="x"></div>
-      <div class="flex flex-wrap gap-2 mt-6">
-        <button id="clear-compare" class="bg-gray-200 p-2 rounded-lg hover:bg-gray-300">ล้างรายการ</button>
-        <button id="export-csv" class="bg-pink-500 text-white p-2 rounded-lg hover:bg-pink-600">ส่งออก CSV</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Contact Modal -->
-  <div id="contact-modal" class="fixed inset-0 hidden items-center justify-center z-[55]">
-    <div class="absolute inset-0 bg-black/60" data-dismiss="overlay"></div>
-    <div class="relative bg-white text-black p-6 rounded-2xl max-w-md w-[92vw] shadow-2xl mx-auto">
-      <h2 class="text-2xl font-bold mb-4 text-center">Contact Us</h2>
-      <form action="mailto:phuriwat.kaolnmzae@gmail.com" method="POST" encType="text/plain" class="flex flex-col gap-4">
-        <input type="text" name="name" placeholder="Your Name" class="p-2 rounded border border-gray-300" required />
-        <input type="email" name="email" placeholder="Your Email" class="p-2 rounded border border-gray-300" required />
-        <textarea name="message" rows="5" placeholder="Your Message" class="p-2 rounded border border-gray-300" required></textarea>
-        <button type="submit" class="bg-pink-500 p-2 rounded hover:bg-pink-600 text-white">Send</button>
-      </form>
-      <button id="close-contact" class="mt-4 bg-gray-900 text-white p-2 rounded hover:bg-black w-full">Close</button>
-    </div>
-  </div>
-
-  <!-- Compare Dock -->
-  <div id="compare-dock" class="fixed inset-x-0 bottom-0 z-[65] hidden">
-    <div class="max-w-6xl mx-auto mb-4 px-4">
-      <div class="bg-black/70 backdrop-blur rounded-2xl shadow-xl p-3 flex items-center justify-between gap-3">
-        <div class="text-sm md:text-base">เลือกไว้ <span id="dock-count" class="font-bold">0</span> รายการ</div>
-        <div class="flex items-center gap-2">
-          <button id="dock-clear" class="px-3 py-2 rounded-lg bg-gray-200 text-black hover:bg-gray-300 text-sm">ล้าง</button>
-          <button id="dock-open" class="px-4 py-2 rounded-lg bg-pink-500 hover:bg-pink-600 text-white text-sm">เปิดหน้าต่าง Compare</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script>
+  <!-- แปลงกลุ่มเนื้อหาเดิมเป็น main-app เพื่อซ่อน/แสดงเมื่อ routing เป็นอื่น -->
+  <div id="main-app">
+   <!-- Sidebar หมวดหมู่ (ซ้าย) -->
+   <aside class="hidden md:flex fixed left-0 top-16 md:top-20 bottom-0 w-40 z-40">
+     <div class="m-3 bg-black/60 backdrop-blur rounded-2xl p-3 shadow-xl w-full">
+       <p class="text-sm font-semibold mb-2 opacity-80">หมวดหมู่</p>
+       <div id="cat-filter" class="flex md:flex-col gap-2">
+         <button data-cat="all" class="cat-chip w-full text-left px-3 py-2 rounded-lg bg-pink-500 text-white text-sm">All</button>
+         <button data-cat="Mouse" class="cat-chip w-full text-left px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-sm">Mouse</button>
+         <button data-cat="Keyboard" class="cat-chip w-full text-left px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-sm">Keyboard</button>
+         <button data-cat="Headset" class="cat-chip w-full text-left px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-sm">Headset</button>
+       </div>
+     </div>
+   </aside>
+ 
+   <!-- Hero -->
+   <section class="pt-24 md:pl-44 text-center px-4">
+     <h1 class="text-5xl font-bold mb-4">เปรียบเทียบอุปกรณ์เกมมิ่งของคุณ</h1>
+     <p class="text-xl mb-8 opacity-90">เลือก Mouse, Keyboard, Headset แล้วกด Compare ได้ทันที</p>
+   </section>
+ 
+   <!-- Toolbar: Brand Filter + Search -->
+   <section class="max-w-6xl mx-auto p-4 mt-2 md:pl-40">
+     <div class="bg-black/50 backdrop-blur rounded-2xl p-4 shadow-xl flex flex-col md:flex-row gap-3 md:items-center md:justify-between">
+       <div class="flex flex-wrap items-center gap-2" id="brand-filter">
+         <button data-brand="all" class="brand-chip px-3 py-1.5 rounded-full bg-pink-500 text-white text-sm">All</button>
+         <button data-brand="Logitech" class="brand-chip px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-sm">Logitech</button>
+         <button data-brand="Razer" class="brand-chip px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-sm">Razer</button>
+         <button data-brand="HyperX" class="brand-chip px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-sm">HyperX</button>
+         <button data-brand="SteelSeries" class="brand-chip px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-sm">SteelSeries</button>
+         <button data-brand="Corsair" class="brand-chip px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-sm">Corsair</button>
+       </div>
+       <div class="w-full md:w-80">
+         <label class="flex items-center gap-2 bg-white/10 rounded-xl px-3 py-2">
+           <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+           <input id="search-input" type="text" placeholder="ค้นหาสินค้า/สเปค เช่น 1000 Hz, Wireless" class="bg-transparent outline-none w-full placeholder-white/60" />
+         </label>
+       </div>
+     </div>
+   </section>
+ 
+   <!-- Products Scroll Wrapper (เพิ่ม auto scroll แนวนอน) -->
+   <section class="max-w-6xl mx-auto p-4 md:pl-40">
+     <div id="products" class="overflow-x-auto" data-autoscroll="x">
+       <div class="grid md:grid-cols-3 gap-6 min-w-[900px]">
+         <!-- Mouse -->
+         <h2 data-cat="Mouse" class="col-span-3 text-2xl font-bold mt-8 mb-4">Mouse</h2>
+ 
+         <div class="product-card bg-black/60 rounded-xl overflow-hidden shadow-lg" data-id="mouse-g304" data-type="Mouse" data-name="Logitech G304" data-price="฿1,039.00" data-specs='{
+           "Type":"Mouse","Rating":"4.7","DPI":"12,000","Sensor":"HERO","Polling Rate":"1000 Hz","Acceleration":"40G","Weight":"99 g","Connectivity":"Wireless 2.4G (Lightspeed)","Battery":"1×AA (สูงสุด ~250 ชม.)","Buttons":"6","Shape":"Symmetrical Right","Grip":"Claw / Fingertip","Dimensions":"116.6 × 62.15 × 38.2 mm","Warranty":"2 ปี"
+         }'>
+           <img src="https://ihcupload.s3.ap-southeast-1.amazonaws.com/img/product/product3166_800.jpg" class="w-full h-48 object-contain bg-white" alt="Logitech G304" />
+           <div class="p-4">
+             <div class="text-xs opacity-80 mb-1"><span class="brand-badge px-2 py-0.5 rounded bg-white/10">—</span></div>
+             <h3 class="font-bold text-xl">LOGITECH G304</h3>
+             <p class="opacity-80">Mouse • ★4.7</p>
+             <p class="font-bold">฿1,039.00</p>
+             <button class="mt-3 px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 add-compare">เพิ่มเพื่อเปรียบเทียบ</button>
+           </div>
+         </div>
+ 
+         <div class="product-card bg-black/60 rounded-xl overflow-hidden shadow-lg" data-id="mouse-dav3" data-type="Mouse" data-name="Razer DeathAdder V3" data-price="฿1,990.00" data-specs='{
+           "Type":"Mouse","Rating":"4.8","DPI":"26,000","Sensor":"Focus Pro 30K","Polling Rate":"1000 Hz (รองรับ 8K)","Acceleration":"70G","Weight":"59 g","Connectivity":"Wired / Wireless (ขึ้นกับรุ่น)","Battery":"~90 ชม. (Wireless)","Buttons":"6","Shape":"Ergonomic Right","Grip":"Palm / Claw","Feet":"100% PTFE","Dimensions":"128 × 68 × 44 mm","Warranty":"2 ปี"
+         }'>
+           <img src="https://ihcupload.s3.ap-southeast-1.amazonaws.com/img/product/product33232_800.png" class="w-full h-48 object-contain bg-white" alt="Razer DeathAdder V3" />
+           <div class="p-4">
+             <div class="text-xs opacity-80 mb-1"><span class="brand-badge px-2 py-0.5 rounded bg-white/10">—</span></div>
+             <h3 class="font-bold text-xl">RAZER DEATHADDER V3</h3>
+             <p class="opacity-80">Mouse • ★4.8</p>
+             <p class="font-bold">฿1,990.00</p>
+             <button class="mt-3 px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 add-compare">เพิ่มเพื่อเปรียบเทียบ</button>
+           </div>
+         </div>
+ 
+         <div class="product-card bg-black/60 rounded-xl overflow-hidden shadow-lg" data-id="mouse-rival3" data-type="Mouse" data-name="SteelSeries Rival 3" data-price="฿1,490.00" data-specs='{
+           "Type":"Mouse","Rating":"4.5","DPI":"8,500","Sensor":"TrueMove Core","Polling Rate":"1000 Hz","Weight":"77 g","Connectivity":"Wired","Buttons":"6","Shape":"Ergonomic Right","Grip":"Claw / Fingertip","Lighting":"RGB (1 โซน)","Dimensions":"120.6 × 58.3 × 21.5 mm","Warranty":"1 ปี"
+         }'>
+           <img src="https://ihcupload.s3.ap-southeast-1.amazonaws.com/img/product/products43592_800.jpg" class="w-full h-48 object-contain bg-white" alt="SteelSeries Rival 3" />
+           <div class="p-4">
+             <div class="text-xs opacity-80 mb-1"><span class="brand-badge px-2 py-0.5 rounded bg-white/10">—</span></div>
+             <h3 class="font-bold text-xl">STEELSERIES RIVAL 3</h3>
+             <p class="opacity-80">Mouse • ★4.5</p>
+             <p class="font-bold">฿1,490.00</p>
+             <button class="mt-3 px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 add-compare">เพิ่มเพื่อเปรียบเทียบ</button>
+           </div>
+         </div>
+ 
+         <!-- NEW Mouse +1 -->
+         <div class="product-card bg-black/60 rounded-xl overflow-hidden shadow-lg" data-id="mouse-harpoon" data-type="Mouse" data-name="Corsair Harpoon RGB Wireless" data-price="฿1,290.00" data-specs='{
+           "Type":"Mouse","Rating":"4.6","DPI":"10,000","Sensor":"PMW3325","Polling Rate":"1000 Hz","Weight":"99 g","Connectivity":"Wireless 2.4G / BT / USB","Battery":"~60 ชม.","Buttons":"6","Shape":"Ergonomic Right","Grip":"Palm / Claw","Lighting":"RGB","Dimensions":"115 × 68 × 40 mm","Warranty":"2 ปี"
+         }'>
+           <img src="https://ihcupload.s3.ap-southeast-1.amazonaws.com/img/product/product33879_800.jpg" class="w-full h-48 object-contain bg-white" alt="Corsair Harpoon RGB Wireless" />
+           <div class="p-4">
+             <div class="text-xs opacity-80 mb-1"><span class="brand-badge px-2 py-0.5 rounded bg-white/10">—</span></div>
+             <h3 class="font-bold text-xl">CORSAIR HARPOON RGB WIRELESS</h3>
+             <p class="opacity-80">Mouse • ★4.6</p>
+             <p class="font-bold">฿1,590.00</p>
+             <button class="mt-3 px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 add-compare">เพิ่มเพื่อเปรียบเทียบ</button>
+           </div>
+         </div>
+ 
+         <!-- Keyboard -->
+         <h2 data-cat="Keyboard" class="col-span-3 text-2xl font-bold mt-8 mb-4">Keyboard</h2>
+ 
+         <div class="product-card bg-black/60 rounded-xl overflow-hidden shadow-lg" data-id="kb-hx-rise75" data-type="Keyboard" data-name="HyperX Alloy Rise 75" data-price="฿6,190.00" data-specs='{
+           "Type":"Keyboard","Rating":"4.6","Size":"75%","Layout":"ANSI","Switch":"HyperX Pre-lubed (Hot-swap)","Mount":"Gasket","Keycap":"PBT Dye-sub","Stabilizers":"Pre-lubed","Connection":"USB-C / Wireless 2.4G / BT 5.0","Battery":"3,000 mAh","Lighting":"RGB Per-key","Polling Rate":"1000 Hz (2.4G)","Software":"HyperX NGENUITY","Dimensions":"~ 325 × 135 × 40 mm","Weight":"~ 900 g","Warranty":"2 ปี"
+         }'>
+           <img src="https://ihcupload.s3.ap-southeast-1.amazonaws.com/img/product/products63368_800.jpg" class="w-full h-48 object-contain bg-white" alt="HyperX Alloy Rise 75" />
+           <div class="p-4">
+             <div class="text-xs opacity-80 mb-1"><span class="brand-badge px-2 py-0.5 rounded bg-white/10">—</span></div>
+             <h3 class="font-bold text-xl">HyperX ALLOY RISE 75</h3>
+             <p class="opacity-80">Keyboard • ★4.6</p>
+             <p class="font-bold">฿6,190.00</p>
+             <button class="mt-3 px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 add-compare">เพิ่มเพื่อเปรียบเทียบ</button>
+           </div>
+         </div>
+ 
+         <div class="product-card bg-black/60 rounded-xl overflow-hidden shadow-lg" data-id="kb-k70-core" data-type="Keyboard" data-name="Corsair K70 Core RGB" data-price="฿2,490.00" data-specs='{
+           "Type":"Keyboard","Rating":"4.8","Size":"Full-size","Layout":"ANSI","Switch":"Corsair MLX (Hot-swap)","Keycap":"ABS Double-shot","Frame":"Aluminum Top Plate","Connection":"USB-C Wired","Polling Rate":"1000 Hz","Lighting":"RGB Per-key","Media Keys":"มี","Software":"iCUE","Wrist Rest":"ถอดได้","Dimensions":"~ 442 × 166 × 40 mm","Weight":"~ 1.1 kg","Warranty":"2 ปี"
+         }'>
+           <img src="https://ihcupload.s3.ap-southeast-1.amazonaws.com/img/product/product34156_800.jpg" class="w-full h-48 object-contain bg-white" alt="Corsair K70 Core RGB" />
+           <div class="p-4">
+             <div class="text-xs opacity-80 mb-1"><span class="brand-badge px-2 py-0.5 rounded bg-white/10">—</span></div>
+             <h3 class="font-bold text-xl">CORSAIR K70 CORE RGB</h3>
+             <p class="opacity-80">Keyboard • ★4.8</p>
+             <p class="font-bold">฿2,490.00</p>
+             <button class="mt-3 px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 add-compare">เพิ่มเพื่อเปรียบเทียบ</button>
+           </div>
+         </div>
+ 
+         <div class="product-card bg-black/60 rounded-xl overflow-hidden shadow-lg" data-id="kb-ornata-v3" data-type="Keyboard" data-name="Razer Ornata V3" data-price="฿2,190.00" data-specs='{
+           "Type":"Keyboard","Rating":"4.7","Size":"Full-size","Layout":"ANSI","Switch":"Mecha-membrane","Keycap":"ABS","Connection":"USB-C Wired","Lighting":"RGB (Chroma)","Media Keys":"มี","Wrist Rest":"มี","Spill Resistant":"Yes","Dimensions":"~ 443 × 170 × 31 mm","Weight":"~ 0.8 kg","Warranty":"2 ปี"
+         }'>
+           <img src="https://ihcupload.s3.ap-southeast-1.amazonaws.com/img/product/products61881_800.jpg" class="w-full h-48 object-contain bg-white" alt="Razer Ornata V3" />
+           <div class="p-4">
+             <div class="text-xs opacity-80 mb-1"><span class="brand-badge px-2 py-0.5 rounded bg-white/10">—</span></div>
+             <h3 class="font-bold text-xl">RAZER ORNATA V3</h3>
+             <p class="opacity-80">Keyboard • ★4.7</p>
+             <p class="font-bold">฿2,190.00</p>
+             <button class="mt-3 px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 add-compare">เพิ่มเพื่อเปรียบเทียบ</button>
+           </div>
+         </div>
+ 
+         <!-- NEW Keyboard +1 -->
+         <div class="product-card bg-black/60 rounded-xl overflow-hidden shadow-lg" data-id="kb-apex3tkl" data-type="Keyboard" data-name="SteelSeries Apex 3 TKL" data-price="฿1,790.00" data-specs='{
+           "Type":"Keyboard","Rating":"4.5","Size":"TKL","Layout":"ANSI","Switch":"Whisper-Quiet (Membrane)","Frame":"Polymer","Connection":"USB-C Wired","Lighting":"RGB 8 โซน","Spill Resistant":"IP32","Media Keys":"มี","Wrist Rest":"ไม่มี","Software":"SteelSeries GG","Dimensions":"~ 364 × 150 × 40 mm","Weight":"~ 0.64 kg","Warranty":"2 ปี"
+         }'>
+           <img src="https://ihcupload.s3.ap-southeast-1.amazonaws.com/img/product/products45033_800.jpg" class="w-full h-48 object-contain bg-white" alt="SteelSeries Apex 3 TKL" />
+           <div class="p-4">
+             <div class="text-xs opacity-80 mb-1"><span class="brand-badge px-2 py-0.5 rounded bg-white/10">—</span></div>
+             <h3 class="font-bold text-xl">STEELSERIES APEX 3 TKL</h3>
+             <p class="opacity-80">Keyboard • ★4.5</p>
+             <p class="font-bold">฿2,890.00</p>
+             <button class="mt-3 px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 add-compare">เพิ่มเพื่อเปรียบเทียบ</button>
+           </div>
+         </div>
+ 
+         <!-- Headset -->
+         <h2 data-cat="Headset" class="col-span-3 text-2xl font-bold mt-8 mb-4">Headset</h2>
+ 
+         <div class="product-card bg-black/60 rounded-xl overflow-hidden shadow-lg" data-id="hs-g333" data-type="Headset" data-name="Logitech G333" data-price="฿1,090.00" data-specs='{
+           "Type":"Headset","Rating":"4.7","Form":"In-ear","Driver":"Dynamic 5.8 mm + 9.2 mm (Dual)","Frequency Response":"20 Hz – 20 kHz","Impedance":"24 Ω","Sensitivity":"101.6 dB @1 kHz SPL","Mic":"Inline","Connectivity":"3.5 mm / USB-C (with adapter)","Cable":"1.2 m","Weight":"~ 19 g","Compatibility":"PC/Console/Mobile","Warranty":"2 ปี"
+         }'>
+           <img src="https://ihcupload.s3.ap-southeast-1.amazonaws.com/img/product/products72284_800.jpg" class="w-full h-48 object-contain bg-white" alt="Logitech G333" />
+           <div class="p-4">
+             <div class="text-xs opacity-80 mb-1"><span class="brand-badge px-2 py-0.5 rounded bg-white/10">—</span></div>
+             <h3 class="font-bold text-xl">LOGITECH G333</h3>
+             <p class="opacity-80">Headset • ★4.7</p>
+             <p class="font-bold">฿1,090.00</p>
+             <button class="mt-3 px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 add-compare">เพิ่มเพื่อเปรียบเทียบ</button>
+           </div>
+         </div>
+ 
+         <div class="product-card bg-black/60 rounded-xl overflow-hidden shadow-lg" data-id="hs-cloud-earbuds2" data-type="Headset" data-name="HyperX Cloud Earbuds II" data-price="฿1,090.00" data-specs='{
+           "Type":"Headset","Rating":"4.6","Form":"In-ear","Driver":"14 mm","Frequency Response":"20 Hz – 20 kHz","Impedance":"24 Ω","Sensitivity":"116 dB SPL/mW","Mic":"Inline, Noise-cancelling","Connectivity":"3.5 mm (TRRS)","Cable":"1.2 m","Weight":"~ 20 g","Includes":"Ear tips (4 ขนาด)","Warranty":"2 ปี"
+         }'>
+           <img src="https://ihcupload.s3.ap-southeast-1.amazonaws.com/img/product/products124206_800.png" class="w-full h-48 object-contain bg-white" alt="HyperX Cloud Earbuds II" />
+           <div class="p-4">
+             <div class="text-xs opacity-80 mb-1"><span class="brand-badge px-2 py-0.5 rounded bg-white/10">—</span></div>
+             <h3 class="font-bold text-xl">HyperX CLOUD EARBUDS II</h3>
+             <p class="opacity-80">Headset • ★4.6</p>
+             <p class="font-bold">฿1,090.00</p>
+             <button class="mt-3 px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 add-compare">เพิ่มเพื่อเปรียบเทียบ</button>
+           </div>
+         </div>
+ 
+         <div class="product-card bg-black/60 rounded-xl overflow-hidden shadow-lg" data-id="hs-arctis-nova7" data-type="Headset" data-name="SteelSeries Arctis Nova 7" data-price="฿5,590.00" data-specs='{
+           "Type":"Headset","Rating":"4.5","Form":"Over-ear","Driver":"40 mm","Frequency Response":"20 Hz – 22 kHz","Impedance":"36 Ω","Sensitivity":"93 dBSPL","Mic":"Retractable, ClearCast Gen 2","Connectivity":"Wireless 2.4G + BT Multipoint / USB-C","Battery":"~ 38 ชม.","Charging":"USB-C Fast Charge","Surround":"Tempest 3D / Windows Sonic","Weight":"~ 325 g","Warranty":"2 ปี"
+         }'>
+           <img src="https://ihcupload.s3.ap-southeast-1.amazonaws.com/img/product/products79670_800.jpg" class="w-full h-48 object-contain bg-white" alt="SteelSeries Arctis Nova 7" />
+           <div class="p-4">
+             <div class="text-xs opacity-80 mb-1"><span class="brand-badge px-2 py-0.5 rounded bg-white/10">—</span></div>
+             <h3 class="font-bold text-xl">STEELSERIES ARCTIS NOVA 7</h3>
+             <p class="opacity-80">Headset • ★4.5</p>
+             <p class="font-bold">฿5,590.00</p>
+             <button class="mt-3 px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 add-compare">เพิ่มเพื่อเปรียบเทียบ</button>
+           </div>
+         </div>
+ 
+         <!-- NEW Headset +1 -->
+         <div class="product-card bg-black/60 rounded-xl overflow-hidden shadow-lg" data-id="hs-hs80" data-type="Headset" data-name="Corsair HS80 RGB Wireless" data-price="฿4,990.00" data-specs='{
+           "Type":"Headset","Rating":"4.6","Form":"Over-ear","Driver":"50 mm","Frequency Response":"20 Hz – 40 kHz","Impedance":"32 Ω","Sensitivity":"109 dB","Mic":"Flip-to-mute Broadcast","Connectivity":"Wireless 2.4G / USB","Battery":"~ 20 ชม.","Charging":"USB-C","Surround":"Dolby Audio 7.1 (PC)","Weight":"~ 367 g","Warranty":"2 ปี"
+         }'>
+           <img src="https://ihcupload.s3.ap-southeast-1.amazonaws.com/img/product/products79622_800.jpg" class="w-full h-48 object-contain bg-white" alt="Corsair HS80 RGB Wireless" />
+           <div class="p-4">
+             <div class="text-xs opacity-80 mb-1"><span class="brand-badge px-2 py-0.5 rounded bg-white/10">—</span></div>
+             <h3 class="font-bold text-xl">CORSAIR HS80 RGB WIRELESS</h3>
+             <p class="opacity-80">Headset • ★4.6</p>
+             <p class="font-bold">฿3,590.00</p>
+             <button class="mt-3 px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 add-compare">เพิ่มเพื่อเปรียบเทียบ</button>
+           </div>
+         </div>
+       </div>
+     </div>
+   </section>
+ 
+   <!-- Compare Modal -->
+   <div id="compare-modal" class="fixed inset-0 hidden items-start justify-center z-[60] overflow-auto pt-16" aria-hidden="true">
+     <div class="absolute inset-0 bg-black/60" data-dismiss="overlay"></div>
+     <div class="relative bg-white text-black p-6 rounded-2xl max-w-6xl w-[92vw] md:w-[80vw] lg:w-[72rem] shadow-2xl mx-auto">
+       <div class="flex items-center justify-between gap-4">
+         <h2 class="text-2xl font-bold">Compare Products</h2>
+         <div class="flex items-center gap-3">
+           <label class="flex items-center gap-2 text-sm select-none"><input type="checkbox" id="toggle-advanced" class="accent-pink-500" /> แสดงสเปคขั้นสูง</label>
+           <button id="close-compare" class="px-3 py-1.5 rounded-lg bg-gray-200 hover:bg-gray-300">ปิด</button>
+         </div>
+       </div>
+       <p class="text-sm text-gray-600 mt-2">ไฮไลต์อัตโนมัติ: Mouse → DPI สูงสุด, น้ำหนักเบาสุด • Headset → ราคาแพงสุด</p>
+       <div id="compare-list" class="space-y-6 mt-4 overflow-x-auto" data-autoscroll="x"></div>
+       <div class="flex flex-wrap gap-2 mt-6">
+         <button id="clear-compare" class="bg-gray-200 p-2 rounded-lg hover:bg-gray-300">ล้างรายการ</button>
+         <button id="export-csv" class="bg-pink-500 text-white p-2 rounded-lg hover:bg-pink-600">ส่งออก CSV</button>
+       </div>
+     </div>
+   </div>
+ 
+   <!-- Contact Modal -->
+   <div id="contact-modal" class="fixed inset-0 hidden items-center justify-center z-[55]">
+     <div class="absolute inset-0 bg-black/60" data-dismiss="overlay"></div>
+     <div class="relative bg-white text-black p-6 rounded-2xl max-w-md w-[92vw] shadow-2xl mx-auto">
+       <h2 class="text-2xl font-bold mb-4 text-center">Contact Us</h2>
+       <form action="mailto:phuriwat.kaolnmzae@gmail.com" method="POST" encType="text/plain" class="flex flex-col gap-4">
+         <input type="text" name="name" placeholder="Your Name" class="p-2 rounded border border-gray-300" required />
+         <input type="email" name="email" placeholder="Your Email" class="p-2 rounded border border-gray-300" required />
+         <textarea name="message" rows="5" placeholder="Your Message" class="p-2 rounded border border-gray-300" required></textarea>
+         <button type="submit" class="bg-pink-500 p-2 rounded hover:bg-pink-600 text-white">Send</button>
+       </form>
+       <button id="close-contact" class="mt-4 bg-gray-900 text-white p-2 rounded hover:bg-black w-full">Close</button>
+     </div>
+   </div>
+ 
+   <!-- Compare Dock -->
+   <div id="compare-dock" class="fixed inset-x-0 bottom-0 z-[65] hidden">
+     <div class="max-w-6xl mx-auto mb-4 px-4">
+       <div class="bg-black/70 backdrop-blur rounded-2xl shadow-xl p-3 flex items-center justify-between gap-3">
+         <div class="text-sm md:text-base">เลือกไว้ <span id="dock-count" class="font-bold">0</span> รายการ</div>
+         <div class="flex items-center gap-2">
+           <button id="dock-clear" class="px-3 py-2 rounded-lg bg-gray-200 text-black hover:bg-gray-300 text-sm">ล้าง</button>
+           <button id="dock-open" class="px-4 py-2 rounded-lg bg-pink-500 hover:bg-pink-600 text-white text-sm">เปิดหน้าต่าง Compare</button>
+         </div>
+       </div>
+     </div>
+   </div>
+ 
+   <script>
     // ========= State & Persist =========
     let compareList = []; // array of product ids
     const STORAGE_KEY = 'comparegear:list';
     const loadPersist = () => { try { const raw = localStorage.getItem(STORAGE_KEY); if (raw) compareList = JSON.parse(raw); } catch {} };
     const savePersist = () => { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(compareList)); } catch {} };
-
+ 
     // ========= DOM Helpers =========
     const $ = (sel, root=document) => root.querySelector(sel);
     const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
-
+ 
     const compareModal = $('#compare-modal');
     const compareListElement = $('#compare-list');
     const compareLink = $('#compare-link');
@@ -309,24 +334,24 @@
     const closeCompareBtn = $('#close-compare');
     const clearCompareBtn = $('#clear-compare');
     const exportCsvBtn = $('#export-csv');
-
+ 
     const contactModal = $('#contact-modal');
     const contactLink = $('#contact-link');
     const closeContact = $('#close-contact');
-
+ 
     const compareDock = $('#compare-dock');
     const dockCount = $('#dock-count');
     const dockClear = $('#dock-clear');
     const dockOpen = $('#dock-open');
-
+ 
     // NEW: Brand + Search controls + Category controls
     const brandChips = $$('#brand-filter .brand-chip');
     const searchInput = $('#search-input');
     const catChips = $$('#cat-filter .cat-chip');
-
+ 
     // ========= Build Product Map (อ่านราคา THB + สเปคละเอียด + แบรนด์) =========
     const productCards = $$('.product-card');
-
+ 
     const extractBrand = (name) => {
       if (!name) return 'Other';
       const first = String(name).trim().split(/\s+/)[0];
@@ -338,7 +363,7 @@
       if (/^corsair$/i.test(normalized)) return 'Corsair';
       return first;
     };
-
+ 
     const productMap = Object.fromEntries(productCards.map(card => {
       const id = card.getAttribute('data-id');
       const name = card.getAttribute('data-name');
@@ -354,7 +379,7 @@
       card.dataset.search = searchable;
       return [id, { id, name, type, specs, img, price, brand }];
     }));
-
+ 
     // ========= Preferred Key Orders (ต่อหมวด) =========
     const COMMON_ORDER = ['Name','Brand','Price','Rating','Type'];
     const ORDER_BY_TYPE = {
@@ -371,7 +396,7 @@
         'Form','Driver','Frequency Response','Impedance','Sensitivity','Mic','Connectivity','Wireless','Battery','Charging','Surround','Cable','Includes','Compatibility','Weight','Warranty'
       ]
     };
-
+ 
     // ========= UI Updates =========
     function updateCountBadges(){
       const count = compareList.length;
@@ -386,7 +411,7 @@
       }
       adjustBottomPadding();
     }
-
+ 
     function syncButtons(){
       productCards.forEach(card => {
         const id = card.getAttribute('data-id');
@@ -397,11 +422,11 @@
         btn.classList.toggle('bg-pink-500', !active);
       });
     }
-
+ 
     function groupByType(items){
       return items.reduce((acc, p) => { (acc[p.type] ||= []).push(p); return acc; }, {});
     }
-
+ 
     function buildOrderedKeys(type, items){
       const order = ORDER_BY_TYPE[type] || COMMON_ORDER;
       const keySet = new Set();
@@ -414,7 +439,7 @@
       const others = Array.from(keySet).filter(k => !preferred.includes(k) && k !== 'Name').sort((a,b)=>a.localeCompare(b));
       return ['Name', ...preferred.filter(k => k!=='Name'), ...others];
     }
-
+ 
     // ========= Highlight Rules =========
     function computeHighlights(type, items){
       const H = {};
@@ -435,7 +460,7 @@
       }
       return H;
     }
-
+ 
     function renderCompareTableFor(type, items){
       const keys = buildOrderedKeys(type, items);
       let thead = '<tr>' + keys.map(k => `<th class="border px-3 py-2 bg-gray-100 text-gray-800 text-xs md:text-sm whitespace-nowrap">${k}</th>`).join('') + '</tr>';
@@ -459,7 +484,7 @@
         }).join('');
         return '<tr>' + tds + '</tr>';
       }).join('');
-
+ 
       return `<div class="mt-6">
         <h3 class="text-xl font-bold mb-2">${type}</h3>
         <div class="overflow-x-auto rounded-lg shadow">
@@ -467,7 +492,7 @@
         </div>
       </div>`;
     }
-
+ 
     function renderCompareList(){
       if(compareList.length === 0){
         compareListElement.innerHTML = '<p class="text-center py-6">ไม่มีสินค้าที่เลือก</p>';
@@ -481,7 +506,7 @@
       }
       compareListElement.innerHTML = html;
     }
-
+ 
     function openCompare(){
       renderCompareList();
       compareModal.classList.remove('hidden');
@@ -493,10 +518,10 @@
       compareModal.classList.remove('flex');
       compareModal.setAttribute('aria-hidden', 'true');
     }
-
+ 
     function openContact(){ contactModal.classList.remove('hidden'); contactModal.classList.add('flex'); }
     function closeContactModal(){ contactModal.classList.add('hidden'); contactModal.classList.remove('flex'); }
-
+ 
     // ========= CSV Export =========
     function exportCSV(){
       if(compareList.length === 0) return;
@@ -523,7 +548,7 @@
       a.href = url; a.download = 'compare_detailed.csv';
       document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
     }
-
+ 
     // ========= Extra =========
     function adjustBottomPadding(){
       const body = document.body;
@@ -531,12 +556,12 @@
       const extra = !dock.classList.contains('hidden') ? (dock.getBoundingClientRect().height + 24) : 24;
       body.style.paddingBottom = Math.max(extra, 48) + 'px';
     }
-
+ 
     // ========= Filtering (Brand + Search + Category) =========
     let activeBrand = 'all';
     let activeCat = 'all';
     let query = '';
-
+ 
     function applyFilters(){
       const q = query.trim().toLowerCase();
       const allCards = $$('.product-card');
@@ -554,7 +579,7 @@
         if (heading) heading.classList.toggle('hidden', !anyVisible);
       });
     }
-
+ 
     function setActiveChip(brand){
       brandChips.forEach(btn => {
         const isActive = btn.dataset.brand === brand;
@@ -563,7 +588,7 @@
         btn.classList.toggle('bg-white/10', !isActive);
       });
     }
-
+ 
     function setActiveCat(cat){
       catChips.forEach(btn => {
         const isActive = btn.dataset.cat === cat;
@@ -572,14 +597,14 @@
         btn.classList.toggle('bg-white/10', !isActive);
       });
     }
-
+ 
     // ========= Events =========
     function toggleItem(id){
       const idx = compareList.indexOf(id);
       if(idx === -1) compareList.push(id); else compareList.splice(idx,1);
       savePersist(); syncButtons(); updateCountBadges();
     }
-
+ 
     function attachCardButtons(){
       const allCards = $$('.product-card');
       allCards.forEach(card => {
@@ -588,7 +613,7 @@
         btn.addEventListener('click', () => toggleItem(id));
       });
     }
-
+ 
     compareLink.addEventListener('click', (e) => { e.preventDefault(); openCompare(); });
     $('#close-compare').addEventListener('click', closeCompare);
     compareModal.addEventListener('click', (e) => { if(e.target.dataset.dismiss === 'overlay') closeCompare(); });
@@ -598,27 +623,27 @@
         if(!contactModal.classList.contains('hidden')) closeContactModal();
       }
     });
-
+ 
     dockOpen.addEventListener('click', openCompare);
     dockClear.addEventListener('click', () => { compareList = []; savePersist(); syncButtons(); updateCountBadges(); renderCompareList(); });
-
+ 
     clearCompareBtn.addEventListener('click', () => { compareList = []; savePersist(); syncButtons(); updateCountBadges(); renderCompareList(); });
     exportCsvBtn.addEventListener('click', exportCSV);
-
+ 
     contactLink.addEventListener('click', (e) => { e.preventDefault(); openContact(); });
     closeContact.addEventListener('click', closeContactModal);
     contactModal.addEventListener('click', (e) => { if(e.target.dataset.dismiss === 'overlay') closeContactModal(); });
-
+ 
     window.addEventListener('resize', adjustBottomPadding);
     window.addEventListener('orientationchange', adjustBottomPadding);
-
+ 
     // NEW: Brand chips & Search
     brandChips.forEach(btn => btn.addEventListener('click', () => {
       activeBrand = btn.dataset.brand;
       setActiveChip(activeBrand);
       applyFilters();
     }));
-
+ 
     // NEW: Category chips (sidebar)
     catChips.forEach(btn => btn.addEventListener('click', () => {
       activeCat = btn.dataset.cat;
@@ -628,20 +653,20 @@
       const products = document.getElementById('products');
       if (products) products.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }));
-
+ 
     // debounce เล็กน้อย
     let t = null;
     searchInput.addEventListener('input', () => {
       clearTimeout(t);
       t = setTimeout(() => { query = searchInput.value; applyFilters(); }, 120);
     });
-
+ 
     // ========= Auto Horizontal Scroll (ไปขวาและรีเซ็ต) =========
     function autoScrollX(el, speed = 1, pause = 1200){
       if(!el) return;
       let rafId = null;
       let running = true;
-
+ 
       function step(){
         if(!running) return;
         // ถ้าไปสุดขวาแล้วให้พักและรีกลับ 0
@@ -657,21 +682,45 @@
         el.scrollLeft += speed;
         rafId = requestAnimationFrame(step);
       }
-
+ 
       // หยุดเมื่อโฮเวอร์ เพื่อให้ผู้ใช้ควบคุมได้
       el.addEventListener('mouseenter', () => { running = false; if(rafId) cancelAnimationFrame(rafId); });
       el.addEventListener('mouseleave', () => { if(!running){ running = true; rafId = requestAnimationFrame(step); } });
-
+ 
       // เริ่มทำงานหลังโหลดหน้า
       rafId = requestAnimationFrame(step);
     }
-
+ 
     // เริ่ม auto scroll กับทุก container ที่ทำ overflow-x
     function initAutoScroll(){
       const targets = $$('[data-autoscroll="x"]');
       targets.forEach(el => autoScrollX(el, 1, 1200));
     }
-
+ 
+    // ===== Simple hash routing: แสดงหน้า Home เป็นหน้าแรก แต่ยังให้ #products, #contact-modal ทำงานได้ =====
+    function applyRoute(){
+      const hash = (location.hash || '#home').split('?')[0];
+      const homeSection = document.getElementById('home');
+      const mainApp = document.getElementById('main-app');
+      if(hash === '' || hash === '#home'){
+        if(homeSection) homeSection.classList.remove('hidden');
+        if(mainApp) mainApp.classList.add('hidden');
+        window.scrollTo({ top: 0, behavior: 'auto' });
+      } else {
+        if(homeSection) homeSection.classList.add('hidden');
+        if(mainApp) mainApp.classList.remove('hidden');
+        // ถ้ามี target ในหน้า (เช่น #products) ให้เลื่อนไปยัง element นั้น
+        const target = document.querySelector(hash);
+        if(target){
+          // ใช้ timeout เล็กน้อยเพื่อให้การแสดงผล DOM พร้อม
+          setTimeout(()=> target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+        }
+      }
+    }
+    // เรียกครั้งแรกและเมื่อ hash เปลี่ยน
+    window.addEventListener('hashchange', applyRoute);
+    applyRoute();
+ 
     // ========= Init =========
     loadPersist();
     attachCardButtons();
@@ -682,6 +731,6 @@
     setActiveCat('all');
     applyFilters();
     initAutoScroll();
-  </script>
-</body>
+   </script>
+ </body>
 </html>
