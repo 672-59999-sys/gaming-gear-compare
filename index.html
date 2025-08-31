@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CompareGear – เปรียบเทียบอุปกรณ์เกมมิ่ง (แยกยี่ห้อ + Search + Sidebar + AutoScroll)</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
   <meta name="color-scheme" content="dark" />
   <!-- redirect removed so index.html#products ใช้งานได้ -->
   <style>
@@ -16,38 +17,177 @@
 </head>
 <body class="bg-gradient-to-r from-gray-900 via-purple-900 to-pink-900 text-white min-h-screen">
   <!-- Header (คงที่เดิม) -->
-  <header class="bg-black/70 backdrop-blur-md fixed w-full z-50">
-    <div class="max-w-6xl mx-auto flex justify-between items-center p-4">
-      <div class="text-2xl font-bold select-none">CompareGear</div>
-      <nav class="flex items-center gap-6">
-        <!-- ใช้ hash routing แทนไฟล์แยก เพื่อเปิดหน้าแรกเป็น Home โดยไม่กระทบลิงก์ Products -->
-        <a href="#home" id="home-link" class="hover:text-pink-400 focus:outline-none focus:ring focus:ring-pink-500/40 rounded px-2 py-1">Home</a>
-        <a href="#" id="compare-link" class="relative hover:text-pink-400 focus:outline-none focus:ring focus:ring-pink-500/40 rounded px-2 py-1">
-          Compare
-          <span id="compare-count-badge" class="hidden absolute -right-3 -top-2 text-xs bg-pink-500 text-white px-1.5 py-0.5 rounded-full">0</span>
-        </a>
-        <a href="#products" class="hover:text-pink-400">Products</a>
-        <a href="#contact-modal" id="contact-link" class="hover:text-pink-400">Contact</a>
-      </nav>
+  <header class="sticky top-0 z-50 bg-black/60 backdrop-blur-md">
+  <div class="max-w-6xl mx-auto flex items-center justify-between gap-4 p-3">
+    <div class="flex items-center gap-3">
+      <button id="mobile-menu-toggle" class="md:hidden p-2 rounded-md hover:bg-white/10 focus:outline-none" aria-label="เมนู">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <a href="#home" class="text-2xl font-bold select-none">CompareGear</a>
     </div>
-  </header>
-  <!-- Home section (default view) -->
-  <section id="home" class="pt-24 md:pl-44 text-center px-4">
-    <div class="max-w-4xl mx-auto p-6">
-      <h1 class="text-5xl font-bold mb-4">ยินดีต้อนรับสู่ CompareGear</h1>
-      <p class="text-lg mb-6 opacity-90">หน้าแรกสรุปฟีเจอร์ — เปรียบเทียบ Mouse, Keyboard, Headset ได้อย่างรวดเร็ว</p>
-      <div class="bg-black/50 backdrop-blur rounded-2xl p-6 shadow-xl space-y-4">
-        <h2 class="text-2xl font-semibold">วิธีใช้</h2>
-        <ol class="list-decimal list-inside text-left space-y-2">
-          <li>ไปที่ <a href="#products" class="text-pink-400 underline">Products</a> เพื่อเลือกสินค้า</li>
-          <li>กด "เพิ่มเพื่อเปรียบเทียบ" บนการ์ดสินค้า</li>
-          <li>เปิดหน้าต่าง Compare จาก dock หรือปุ่ม Compare</li>
-        </ol>
-        <div class="flex justify-center gap-3 mt-4">
-          <a href="#products" class="px-4 py-2 bg-pink-500 rounded hover:bg-pink-600 text-white">ดูสินค้า</a>
-          <a href="#compare-modal" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 text-black">ไปยังหน้าเปรียบเทียบ</a>
+
+    <!-- Desktop nav -->
+    <nav class="hidden md:flex items-center gap-4">
+      <a href="#home" class="px-2 py-1 rounded hover:text-pink-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-500/50">Home</a>
+
+      <!-- Products dropdown -->
+      <div class="relative group">
+        <button class="px-2 py-1 rounded hover:text-pink-400 flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-500/50">
+          Products
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 opacity-80" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06-.02L10 10.67l3.71-3.48a.75.75 0 011.02 1.1l-4.2 3.94a.75.75 0 01-1.02 0L5.25 8.29a.75.75 0 01-.02-1.08z"/></svg>
+        </button>
+        <div class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity duration-150 absolute right-0 mt-2 w-64 bg-black/80 backdrop-blur rounded-lg shadow-lg text-sm p-3 z-50">
+          <div class="flex items-center justify-between mb-2">
+            <div class="font-semibold">By Category</div>
+            <a href="#products" class="text-pink-400 text-xs">ดูทั้งหมด</a>
+          </div>
+          <ul id="menu-cat-list" class="space-y-1">
+            <li class="flex items-center justify-between"><a href="#products" class="block">All</a><span id="menu-count-all" class="text-xs opacity-75">0</span></li>
+            <li class="flex items-center justify-between"><a href="#products" data-cat="Mouse" class="block">Mouse</a><span id="menu-count-mouse" class="text-xs opacity-75">0</span></li>
+            <li class="flex items-center justify-between"><a href="#products" data-cat="Keyboard" class="block">Keyboard</a><span id="menu-count-keyboard" class="text-xs opacity-75">0</span></li>
+            <li class="flex items-center justify-between"><a href="#products" data-cat="Headset" class="block">Headset</a><span id="menu-count-headset" class="text-xs opacity-75">0</span></li>
+          </ul>
         </div>
       </div>
+
+      <!-- Brands dropdown -->
+      <div class="relative group">
+        <button class="px-2 py-1 rounded hover:text-pink-400 flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-500/50">
+          Brands
+        </button>
+        <div class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity duration-150 absolute right-0 mt-2 w-64 bg-black/80 backdrop-blur rounded-lg shadow-lg text-sm p-3 z-50">
+          <div class="flex items-center justify-between mb-2">
+            <div class="font-semibold">By Brand</div>
+            <a href="#products" class="text-pink-400 text-xs">ดูทั้งหมด</a>
+          </div>
+          <ul id="menu-brand-list" class="grid grid-cols-2 gap-2 text-xs">
+            <!-- populated by JS -->
+          </ul>
+        </div>
+      </div>
+
+      <a href="#contact-modal" id="contact-link" class="px-2 py-1 rounded hover:text-pink-400">Contact</a>
+
+      <!-- Compare quick access with count -->
+      <button id="compare-link" class="relative px-2 py-1 rounded hover:text-pink-400 focus:outline-none">
+        Compare
+        <span id="compare-count-badge" class="hidden absolute -right-3 -top-2 text-xs bg-pink-500 text-white px-1.5 py-0.5 rounded-full">0</span>
+      </button>
+    </nav>
+
+    <!-- Search (prominent) -->
+    <div class="flex-1 px-3 hidden md:block">
+      <div class="relative">
+        <input id="header-search" type="search" placeholder="ค้นหา: ชื่อสินค้า, สเปค, ยี่ห้อ..." class="w-full rounded-full bg-white/8 placeholder-white/60 px-4 py-2 outline-none focus:ring-2 focus:ring-pink-500/40" aria-label="ค้นหา"/>
+        <ul id="header-search-suggestions" class="hidden absolute left-0 right-0 mt-1 bg-black/80 backdrop-blur rounded-md shadow max-h-48 overflow-auto text-sm z-50"></ul>
+      </div>
+    </div>
+
+    <!-- Mobile actions -->
+    <div class="md:hidden flex items-center gap-2">
+      <button id="mobile-search-toggle" class="p-2 rounded-md hover:bg-white/10 focus:outline-none" aria-label="ค้นหา"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="11" cy="11" r="7" stroke-width="2"/><path d="M21 21l-4.35-4.35" stroke-width="2"/></svg></button>
+      <a href="#compare-modal" id="mobile-compare-btn" class="p-2 rounded-md hover:bg-white/10" aria-label="Compare">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2" d="M3 7h4v10H3zM9 3h4v14H9zM15 11h4v6h-4z"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- Mobile menu (hidden by default) -->
+  <div id="mobile-menu" class="md:hidden hidden bg-black/70 border-t border-white/5">
+    <div class="max-w-6xl mx-auto p-3 flex flex-col gap-2">
+      <a href="#home" class="px-3 py-2 rounded hover:bg-white/5">Home</a>
+      <a href="#products" class="px-3 py-2 rounded hover:bg-white/5">Products</a>
+      <div class="flex gap-2">
+        <a href="#compare-modal" class="flex-1 px-3 py-2 rounded bg-pink-500 text-white text-center">Compare</a>
+        <a href="#wishlist" class="flex-1 px-3 py-2 rounded hover:bg-white/5 text-center">Wishlist</a>
+      </div>
+      <a href="#contact-modal" class="px-3 py-2 rounded hover:bg-white/5">Contact</a>
+      <div class="pt-2 border-t border-white/5">
+        <div class="text-xs opacity-80 mb-1">Brands</div>
+        <div id="mobile-brand-list" class="flex flex-wrap gap-2"></div>
+      </div>
+    </div>
+  </div>
+</header>
+  <!-- Home section (default view) -->
+  <section id="home" class="pt-24 md:pl-44 text-center px-4">
+    <div class="max-w-6xl mx-auto p-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+        <div class="lg:col-span-2 text-left">
+          <h1 class="text-5xl font-bold mb-4">ยินดีต้อนรับสู่ CompareGear</h1>
+          <p class="text-lg mb-6 opacity-90">หน้าแรกสรุปฟีเจอร์ — เปรียบเทียบ Mouse, Keyboard, Headset ได้อย่างรวดเร็ว</p>
+
+          <div class="bg-black/50 backdrop-blur rounded-2xl p-6 shadow-xl space-y-4">
+            <h2 class="text-2xl font-semibold">วิธีใช้</h2>
+            <ol class="list-decimal list-inside text-left space-y-2">
+              <li>ไปที่ <a href="#products" class="text-pink-400 underline">Products</a> เพื่อเลือกสินค้า</li>
+              <li>กด "เพิ่มเพื่อเปรียบเทียบ" บนการ์ดสินค้า</li>
+              <li>เปิดหน้าต่าง Compare จาก dock หรือปุ่ม Compare</li>
+            </ol>
+            <div class="flex justify-start gap-3 mt-4">
+              <a href="#products" class="px-4 py-2 bg-pink-500 rounded hover:bg-pink-600 text-white">ดูสินค้า</a>
+              <a href="#compare-modal" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 text-black">ไปยังหน้าเปรียบเทียบ</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Best sellers sidebar on large screens / block on mobile -->
+        <aside class="lg:col-span-1">
+          <div class="bg-black/60 backdrop-blur rounded-2xl p-4 shadow-xl">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-xl font-bold">Best Sellers</h2>
+              <a href="#products" class="text-sm text-pink-400 underline">ดูทั้งหมด</a>
+            </div>
+
+            <div class="grid grid-cols-1 gap-3">
+              <!-- Item 1 -->
+              <div class="flex items-center gap-3 p-2 rounded-lg bg-black/40">
+                <img src="https://ihcupload.s3.ap-southeast-1.amazonaws.com/img/product/product3166_800.jpg" alt="LOGITECH G304" class="w-16 h-16 object-contain bg-white rounded" />
+                <div class="flex-1">
+                  <div class="font-semibold text-sm">LOGITECH G304</div>
+                  <div class="text-xs opacity-80">Mouse • ★4.7</div>
+                  <div class="font-bold mt-1">฿1,039</div>
+                </div>
+                <button onclick="event.preventDefault(); jumpToProduct('mouse-g304')" class="px-3 py-1 rounded bg-pink-500 text-white text-sm">ดู</button>
+              </div>
+
+              <!-- Item 2 -->
+              <div class="flex items-center gap-3 p-2 rounded-lg bg-black/40">
+                <img src="https://ihcupload.s3.ap-southeast-1.amazonaws.com/img/product/product33232_800.png" alt="RAZER DEATHADDER V3" class="w-16 h-16 object-contain bg-white rounded" />
+                <div class="flex-1">
+                  <div class="font-semibold text-sm">RAZER DEATHADDER V3</div>
+                  <div class="text-xs opacity-80">Mouse • ★4.8</div>
+                  <div class="font-bold mt-1">฿1,990</div>
+                </div>
+                <button onclick="event.preventDefault(); jumpToProduct('mouse-dav3')" class="px-3 py-1 rounded bg-pink-500 text-white text-sm">ดู</button>
+              </div>
+
+              <!-- Item 3 -->
+              <div class="flex items-center gap-3 p-2 rounded-lg bg-black/40">
+                <img src="https://ihcupload.s3.ap-southeast-1.amazonaws.com/img/product/product34156_800.jpg" alt="CORSAIR K70 CORE RGB" class="w-16 h-16 object-contain bg-white rounded" />
+                <div class="flex-1">
+                  <div class="font-semibold text-sm">CORSAIR K70 CORE RGB</div>
+                  <div class="text-xs opacity-80">Keyboard • ★4.8</div>
+                  <div class="font-bold mt-1">฿2,490</div>
+                </div>
+                <button onclick="event.preventDefault(); jumpToProduct('kb-k70-core')" class="px-3 py-1 rounded bg-pink-500 text-white text-sm">ดู</button>
+              </div>
+
+              <!-- Item 4 -->
+              <div class="flex items-center gap-3 p-2 rounded-lg bg-black/40">
+                <img src="https://ihcupload.s3.ap-southeast-1.amazonaws.com/img/product/products79670_800.jpg" alt="STEELSERIES ARCTIS NOVA 7" class="w-16 h-16 object-contain bg-white rounded" />
+                <div class="flex-1">
+                  <div class="font-semibold text-sm">STEELSERIES ARCTIS NOVA 7</div>
+                  <div class="text-xs opacity-80">Headset • ★4.5</div>
+                  <div class="font-bold mt-1">฿5,590</div>
+                </div>
+                <button onclick="event.preventDefault(); jumpToProduct('hs-arctis-nova7')" class="px-3 py-1 rounded bg-pink-500 text-white text-sm">ดู</button>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+
       <footer class="mt-8 text-sm opacity-80">© CompareGear</footer>
     </div>
   </section>
@@ -293,12 +433,17 @@
      <div class="absolute inset-0 bg-black/60" data-dismiss="overlay"></div>
      <div class="relative bg-white text-black p-6 rounded-2xl max-w-md w-[92vw] shadow-2xl mx-auto">
        <h2 class="text-2xl font-bold mb-4 text-center">Contact Us</h2>
-       <form action="mailto:phuriwat.kaolnmzae@gmail.com" method="POST" encType="text/plain" class="flex flex-col gap-4">
-         <input type="text" name="name" placeholder="Your Name" class="p-2 rounded border border-gray-300" required />
-         <input type="email" name="email" placeholder="Your Email" class="p-2 rounded border border-gray-300" required />
-         <textarea name="message" rows="5" placeholder="Your Message" class="p-2 rounded border border-gray-300" required></textarea>
-         <button type="submit" class="bg-pink-500 p-2 rounded hover:bg-pink-600 text-white">Send</button>
-       </form>
+       <form id="contact-form" action="#" method="POST" class="flex flex-col gap-4" novalidate>
+  <label class="sr-only" for="contact-name">Name</label>
+  <input id="contact-name" name="name" type="text" required minlength="2" placeholder="ชื่อ" class="p-2 rounded" />
+  <label class="sr-only" for="contact-email">Email</label>
+  <input id="contact-email" name="email" type="email" required placeholder="email@example.com" class="p-2 rounded" />
+  <label class="sr-only" for="contact-message">Message</label>
+  <textarea id="contact-message" name="message" required minlength="10" placeholder="ข้อความ" rows="4" class="p-2 rounded"></textarea>
+  <input type="hidden" name="honeypot" id="honeypot" value="" />
+  <button type="submit" class="bg-gray-900 text-white p-2 rounded hover:bg-black">Send</button>
+  <p id="contact-feedback" class="text-sm mt-2" aria-live="polite"></p>
+</form>
        <button id="close-contact" class="mt-4 bg-gray-900 text-white p-2 rounded hover:bg-black w-full">Close</button>
      </div>
    </div>
@@ -315,6 +460,18 @@
        </div>
      </div>
    </div>
+ 
+   <!-- Mobile bottom navigation -->
+  <nav id="mobile-bottom-nav" class="md:hidden fixed bottom-0 inset-x-0 z-60 bg-black/85 text-white border-t border-white/5">
+    <div class="max-w-6xl mx-auto flex justify-between items-center px-4 py-2">
+      <a href="#home" class="flex flex-col items-center text-xs gap-1"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12h18M3 6h18M3 18h18"/></svg><span>Home</span></a>
+      <button id="mobile-nav-search" class="flex flex-col items-center text-xs gap-1"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="11" cy="11" r="7" stroke-width="2"/><path d="M21 21l-4.35-4.35" stroke-width="2"/></svg><span>Search</span></button>
+      <button id="mobile-nav-compare" class="flex flex-col items-center text-xs gap-1 relative"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2" d="M3 7h4v10H3zM9 3h4v14H9zM15 11h4v6h-4z"/></svg><span>Compare</span><span id="mobile-compare-badge" class="hidden absolute -right-1 -top-1 text-[10px] bg-pink-500 px-1 rounded-full">0</span></button>
+      <a href="#wishlist" class="flex flex-col items-center text-xs gap-1"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12h18M3 6h18M3 18h18"/></svg><span>Wishlist</span></a>
+      <a href="#account" class="flex flex-col items-center text-xs gap-1"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12h18M3 6h18M3 18h18"/></svg><span>Account</span></a>
+    </div>
+  </nav>
+  <div class="h-14 md:hidden"></div> <!-- spacer to avoid overlap -->
  
    <script>
     // ========= State & Persist =========
@@ -721,16 +878,168 @@
     window.addEventListener('hashchange', applyRoute);
     applyRoute();
  
-    // ========= Init =========
-    loadPersist();
-    attachCardButtons();
-    syncButtons();
-    updateCountBadges();
-    adjustBottomPadding();
-    setActiveChip('all');
-    setActiveCat('all');
-    applyFilters();
-    initAutoScroll();
-   </script>
+    // ---------- NEW: header/menu + autocomplete helpers ----------
+  function updateMenuCountsAndBrands(){
+    const cats = { all:0, Mouse:0, Keyboard:0, Headset:0 };
+    const brands = {};
+    $$('.product-card').forEach(card => {
+      cats.all++;
+      const t = card.dataset.type;
+      if(t && cats[t] !== undefined) cats[t]++;
+      const b = card.dataset.brand || (card.dataset.name||'').split(' ')[0];
+      brands[b] = (brands[b]||0) + 1;
+    });
+    document.getElementById('menu-count-all').textContent = cats.all;
+    document.getElementById('menu-count-mouse').textContent = cats.Mouse;
+    document.getElementById('menu-count-keyboard').textContent = cats.Keyboard;
+    document.getElementById('menu-count-headset').textContent = cats.Headset;
+    // populate brand list (desktop)
+    const brandList = document.getElementById('menu-brand-list');
+    const mobileBrandList = document.getElementById('mobile-brand-list');
+    if(brandList) brandList.innerHTML = Object.entries(brands).sort((a,b)=>b[1]-a[1]).map(([name,count]) => `<li class="flex items-center justify-between"><a href="#products" data-brand="${name}" class="block">${name}</a><span class="opacity-75 text-xs">${count}</span></li>`).join('');
+    if(mobileBrandList) mobileBrandList.innerHTML = Object.keys(brands).slice(0,8).map(b => `<button data-brand="${b}" class="px-2 py-1 rounded bg-white/5 text-xs">${b} <span class="opacity-80 text-[11px]">(${brands[b]})</span></button>`).join('');
+    // wire brand links in menu to filters
+    brandList && brandList.querySelectorAll('[data-brand]').forEach(el => el.addEventListener('click', e => {
+      e.preventDefault();
+      const br = el.getAttribute('data-brand');
+      activeBrand = br;
+      setActiveChip(br);
+      applyFilters();
+      location.hash = '#products';
+    }));
+    mobileBrandList && mobileBrandList.querySelectorAll('[data-brand]').forEach(el => el.addEventListener('click', e => {
+      e.preventDefault();
+      const br = el.getAttribute('data-brand');
+      activeBrand = br;
+      setActiveChip(br);
+      applyFilters();
+      document.getElementById('mobile-menu-toggle').click?.(); // close menu if available
+      location.hash = '#products';
+    }));
+  }
+
+  // Autocomplete for header-search
+  (function initHeaderSearch(){
+    const headerSearch = document.getElementById('header-search');
+    const sugBox = document.getElementById('header-search-suggestions');
+    if(!headerSearch || !sugBox) return;
+    const names = $$('.product-card').map(c => ({name: c.dataset.name || c.querySelector('h3')?.textContent||'', id: c.dataset.id||''})).filter(Boolean);
+    let sel = -1;
+    headerSearch.addEventListener('input', () => {
+      const q = headerSearch.value.trim().toLowerCase();
+      if(!q){ sugBox.classList.add('hidden'); sugBox.innerHTML=''; sel=-1; return; }
+      const matches = names.filter(n => n.name.toLowerCase().includes(q)).slice(0,8);
+      if(matches.length === 0){ sugBox.classList.add('hidden'); sugBox.innerHTML=''; return; }
+      sugBox.innerHTML = matches.map(m => `<li data-id="${m.id}" class="px-3 py-2 hover:bg-white/5 cursor-pointer">${m.name}</li>`).join('');
+      sugBox.classList.remove('hidden');
+      sugBox.querySelectorAll('li').forEach((li, i) => {
+        li.addEventListener('click', () => {
+          headerSearch.value = li.textContent;
+          sugBox.classList.add('hidden');
+          // if product id exists, jump straight to it
+          const id = li.getAttribute('data-id');
+          if(id) jumpToProduct(id);
+          else { query = headerSearch.value; applyFilters(); location.hash = '#products'; }
+        });
+      });
+    });
+
+    headerSearch.addEventListener('keydown', (ev) => {
+      const items = sugBox.querySelectorAll('li');
+      if(!items.length) return;
+      if(ev.key === 'ArrowDown'){ ev.preventDefault(); sel = Math.min(sel+1, items.length-1); items.forEach((it,i)=>it.classList.toggle('bg-white/5', i===sel)); items[sel]?.scrollIntoView({block:'nearest'}); }
+      if(ev.key === 'ArrowUp'){ ev.preventDefault(); sel = Math.max(sel-1, 0); items.forEach((it,i)=>it.classList.toggle('bg-white/5', i===sel)); items[sel]?.scrollIntoView({block:'nearest'}); }
+      if(ev.key === 'Enter'){ ev.preventDefault(); if(sel>=0){ items[sel].click(); } else { query = headerSearch.value; applyFilters(); location.hash = '#products'; sugBox.classList.add('hidden'); } sel=-1; }
+      if(ev.key === 'Escape'){ sugBox.classList.add('hidden'); sel=-1; }
+    });
+
+    document.addEventListener('click', (e) => { if(!e.composedPath().includes(headerSearch) && !e.composedPath().includes(sugBox)) { sugBox.classList.add('hidden'); } });
+  })();
+
+  // Mobile menu toggle + search toggle + update compare badge
+  (function initHeaderUI(){
+    const toggle = document.getElementById('mobile-menu-toggle');
+    const menu = document.getElementById('mobile-menu');
+    const mobileSearchToggle = document.getElementById('mobile-search-toggle');
+    const mobileNavSearchBtn = document.getElementById('mobile-nav-search');
+    const headerSearch = document.getElementById('header-search');
+    const mobileCompare = document.getElementById('mobile-nav-compare');
+    const mobileCompareBadge = document.getElementById('mobile-compare-badge');
+    toggle && toggle.addEventListener('click', ()=> menu.classList.toggle('hidden'));
+
+    mobileSearchToggle && mobileSearchToggle.addEventListener('click', ()=> {
+      // focus header search on mobile by showing it in an overlay
+      headerSearch?.focus();
+      location.hash = '#products';
+    });
+    mobileNavSearchBtn && mobileNavSearchBtn.addEventListener('click', ()=> { headerSearch?.focus(); location.hash = '#products'; });
+
+    // update compare counts in header and mobile
+    function refreshCompareBadges(){
+      const cnt = compareList.length || 0;
+      const badge = document.getElementById('compare-count-badge');
+      if(badge) { badge.textContent = cnt; badge.classList.toggle('hidden', cnt===0); }
+      if(mobileCompareBadge) { mobileCompareBadge.textContent = cnt; mobileCompareBadge.classList.toggle('hidden', cnt===0); }
+    }
+
+    // run after init
+    refreshCompareBadges();
+    // expose small API to refresh when compareList updates
+    window.__refreshCompareBadges = refreshCompareBadges;
+    // hook into existing updateCountBadges to also refresh header badges
+    const _oldUpdate = updateCountBadges;
+    updateCountBadges = function(){ _oldUpdate(); refreshCompareBadges(); };
+
+  })();
+
+  // run menu counts after products parsed
+  updateMenuCountsAndBrands();
+
+  // (เพิ่มฟังก์ชันช่วยเลื่อนไปยังสินค้า เมื่อปุ่ม Best Sellers ถูกกด)
+  function jumpToProduct(id){
+    location.hash = '#products';
+    setTimeout(() => {
+      const card = document.querySelector(`.product-card[data-id="${id}"]`);
+      const products = document.getElementById('products');
+      if(!card) return;
+      if(products && products.contains(card) && products.scrollWidth > products.clientWidth){
+        const left = Math.max(0, card.offsetLeft - 16);
+        products.scrollTo({ left, behavior: 'smooth' });
+      } else {
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      card.classList.add('ring-2','ring-pink-400');
+      setTimeout(() => card.classList.remove('ring-2','ring-pink-400'), 1600);
+    }, 180);
+  }
+  window.jumpToProduct = jumpToProduct;
+
+  // เรียกการตั้งค่าเริ่มต้นของระบบ Compare / UI
+  (() => {
+    try {
+      loadPersist();           // โหลดรายการจาก localStorage
+    } catch {}
+    try {
+      attachCardButtons();     // ผูกปุ่ม "เพิ่มเพื่อเปรียบเทียบ"
+    } catch {}
+    try {
+      syncButtons();           // ปรับปุ่มตามสถานะ
+    } catch {}
+    try {
+      updateCountBadges();     // แสดง/ซ่อน dock และ badge
+    } catch {}
+    try {
+      renderCompareList();     // เตรียม HTML ใน modal (ถ้ามี)
+    } catch {}
+    try {
+      adjustBottomPadding();   // ปรับ padding ด้านล่างให้พอดี
+    } catch {}
+    try {
+      // อัพเดต badges header / mobile (ถ้ามีฟังก์ชันช่วย)
+      window.__refreshCompareBadges?.();
+    } catch {}
+  })();
+  // ...existing code...
+</script>
  </body>
 </html>
